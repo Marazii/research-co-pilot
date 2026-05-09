@@ -3,7 +3,7 @@ description: Clean, analyze, model, and visualize quantitative data — Python o
 argument-hint: <dataset path or analysis question>
 ---
 
-Invoke the `data-analysis` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `data-analysis` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/data-analysis/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Frame the question (descriptive / inferential / predictive / causal).

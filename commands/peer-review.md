@@ -3,7 +3,7 @@ description: Rigorous academic peer review of a paper, thesis, essay, or assignm
 argument-hint: <path to document, e.g., paper.docx or paper.md>
 ---
 
-Invoke the `peer-review` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `peer-review` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/peer-review/SKILL.md` relative to this plugin. Read it and follow it precisely.
 

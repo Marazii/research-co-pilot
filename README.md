@@ -1,4 +1,4 @@
-# research-mentor
+# research-co-pilot
 
 A Claude assistant for the entire research lifecycle — from picking a question through final peer review. Designed for academic researchers (graduate students, postdocs, faculty) and applied researchers (UX, policy, public health, data science) who want a rigorous collaborator that respects methodological standards instead of generating plausible-looking output.
 
@@ -50,10 +50,10 @@ You need Claude Code installed and a working terminal.
 
 ```bash
 # Add this repo as a Claude Code marketplace
-/plugin marketplace add https://github.com/marazii/research-mentor
+/plugin marketplace add https://github.com/marazii/research-co-pilot
 
 # Install the plugin from that marketplace
-/plugin install research-mentor@research-mentor-marketplace
+/plugin install research-co-pilot@research-co-pilot-marketplace
 ```
 
 After install, run `/research` for the menu, or invoke any specific skill by name (e.g. `/lit-review climate adaptation in coastal cities`).
@@ -61,24 +61,24 @@ After install, run `/research` for the menu, or invoke any specific skill by nam
 **Local install** (for development or to use without GitHub):
 
 ```bash
-git clone https://github.com/marazii/research-mentor.git
-cd research-mentor
+git clone https://github.com/marazii/research-co-pilot.git
+cd research-co-pilot
 
 # Add your local clone as a marketplace
 # Edit ~/.claude/settings.json and add:
 {
   "plugins": {
     "marketplaces": {
-      "research-mentor-local": {
+      "research-co-pilot-local": {
         "type": "local",
-        "path": "/absolute/path/to/the/parent/of/research-mentor"
+        "path": "/absolute/path/to/the/parent/of/research-co-pilot"
       }
     }
   }
 }
 
 # Then in Claude Code:
-/plugin install research-mentor@research-mentor-local
+/plugin install research-co-pilot@research-co-pilot-local
 ```
 
 ---
@@ -87,7 +87,7 @@ cd research-mentor
 
 Each skill is uploaded to claude.ai individually as a Claude Skill. Pre-built upload bundles ship in [`dist/`](dist/).
 
-1. Download the `.zip` for each skill you want from [`dist/`](dist/) (or grab them all from the [latest release](https://github.com/marazii/research-mentor/releases)).
+1. Download the `.zip` for each skill you want from [`dist/`](dist/) (or grab them all from the [latest release](https://github.com/marazii/research-co-pilot/releases)).
 2. In claude.ai, open **Settings → Capabilities → Skills** (Pro/Team/Enterprise plans), or open your workspace's **Skills library** (Team/Enterprise).
 3. Click **Upload skill** and select a `.zip`. Repeat for each skill.
 
@@ -147,7 +147,7 @@ The skill extracts every in-text citation, verifies DOIs, checks that the in-tex
 ## What's in the box
 
 ```
-research-mentor/
+research-co-pilot/
 ├── .claude-plugin/
 │   ├── plugin.json           # Claude Code plugin manifest
 │   └── marketplace.json      # one-command install from GitHub

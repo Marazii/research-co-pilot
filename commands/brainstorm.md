@@ -3,7 +3,7 @@ description: Brainstorm and pressure-test research ideas, questions, and angles
 argument-hint: <topic, field, or rough idea>
 ---
 
-Invoke the `research-brainstorm` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `research-brainstorm` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/research-brainstorm/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Locate the user (starting point, stage, constraints).

@@ -3,7 +3,7 @@ description: Get advice on quantitative or qualitative research design, sampling
 argument-hint: <research question or design problem>
 ---
 
-Invoke the `methodology-advisor` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `methodology-advisor` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/methodology-advisor/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Diagnose the question (paradigm, unit of analysis, constraints).

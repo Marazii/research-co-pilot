@@ -3,7 +3,7 @@ description: Format citations and bibliographies in any major academic style; co
 argument-hint: <citations, paths, or "fix references in <file>">
 ---
 
-Invoke the `citation-formatter` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `citation-formatter` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/citation-formatter/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Determine style, output type, source material, edition.

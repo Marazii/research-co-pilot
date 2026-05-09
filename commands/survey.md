@@ -3,7 +3,7 @@ description: Design rigorous surveys — question wording, scales, ordering, val
 argument-hint: <topic, construct, or draft survey>
 ---
 
-Invoke the `survey-design` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `survey-design` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/survey-design/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Frame the project (goal, constructs, population, mode, target N).

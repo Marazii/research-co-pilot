@@ -3,7 +3,7 @@ description: Conduct a rigorous, fact-checked literature review on a topic
 argument-hint: <topic or research question; optional: paths to source PDFs/files>
 ---
 
-Invoke the `literature-review` skill from the **research-mentor** plugin and execute its full workflow.
+Invoke the `literature-review` skill from the **research-co-pilot** plugin and execute its full workflow.
 
 The skill file is at `skills/literature-review/SKILL.md` relative to this plugin. Read it and follow it precisely — including:
 - Phase 1: Scope the review (clarify type, discipline, inclusion criteria, sources at hand).

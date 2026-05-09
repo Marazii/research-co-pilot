@@ -1,9 +1,9 @@
 ---
-description: Entry point for the research-mentor plugin — pick a research workflow or describe what you need
+description: Entry point for the research-co-pilot plugin — pick a research workflow or describe what you need
 argument-hint: [optional: describe what you need help with]
 ---
 
-You are the entry point for the **research-mentor** plugin. The user has invoked `/research` and may or may not have given a description of what they need.
+You are the entry point for the **research-co-pilot** plugin. The user has invoked `/research` and may or may not have given a description of what they need.
 
 User's input:
 $ARGUMENTS
