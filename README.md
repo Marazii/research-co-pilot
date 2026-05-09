@@ -261,4 +261,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Credits
 
-Built by Maya Arazi. Peer-review skill draws on prior work by the Anthropic Skills community. Methodological frameworks reference standard research methods literature (Braun & Clarke, Charmaz, Shadish-Cook-Campbell, Dillman, Lincoln & Guba, and many others) — all citations belong to their original authors.
+Built by Maya Arazi — all skills (including `peer-review`), subagents, and slash commands. Methodological frameworks reference standard research methods literature (Braun & Clarke, Charmaz, Shadish-Cook-Campbell, Dillman, Lincoln & Guba, and many others) — all citations belong to their original authors.
