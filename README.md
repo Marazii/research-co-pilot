@@ -18,6 +18,7 @@ Same skills, same behavior, two surfaces.
 | Finding a question | **research-brainstorm** | "help me find a thesis topic in X", "brainstorm research ideas" |
 | Reviewing the field | **literature-review** | "what does the research say about X", "do a lit review on Y" |
 | Designing the study | **methodology-advisor** | "should I use an RCT or quasi-experiment?", "what sample size do I need?" |
+| Stress-testing the ethics | **ethics-committee** | "is this study ethical?", "review my IRB application", "draft an ethics statement" |
 | Designing instruments | **survey-design** | "is this question biased?", "find a validated scale for X" |
 | Analyzing quantitative data | **data-analysis** | "clean this dataset", "fit a regression", "run a power analysis" |
 | Analyzing qualitative data | **qualitative-coding** | "code these transcripts", "build a codebook", "find themes" |
@@ -154,6 +155,7 @@ research-co-pilot/
 ├── skills/                   # Portable: work in Claude Code AND claude.ai
 │   ├── literature-review/
 │   ├── methodology-advisor/
+│   ├── ethics-committee/
 │   ├── data-analysis/
 │   ├── qualitative-coding/
 │   ├── research-brainstorm/
@@ -181,6 +183,7 @@ research-co-pilot/
 |-------|-------------|
 | `literature-review` | Fact-checked synthesis of a body of work. Verifies citations, organizes by idea, surfaces disagreement, marks confidence on every claim, identifies specific gaps. Supports narrative, systematic, scoping, rapid, and thematic reviews. |
 | `methodology-advisor` | Quant + qual research design — picking the right design for the question, sampling strategy, power and sample size, validity threats, IRB/ethics, pre-registration. Pushes back when a chosen method doesn't fit the question. |
+| `ethics-committee` | Simulates an IRB / REC / HREC pre-submission review. Audits informed consent, risk-benefit, vulnerable populations, data privacy, deception, payment, AI/LLM use, social media data, equity in recruitment. Produces a decision letter with required revisions. Optional 3-reviewer panel mode. Not a substitute for institutional approval. |
 | `data-analysis` | End-to-end quantitative work in Python or R: cleaning, EDA, statistical testing, modeling (regression, mixed-effects, predictive, time series, survival), assumption diagnostics, sensitivity analyses, visualization, reproducible scripts. |
 | `qualitative-coding` | Codebook development and application using thematic analysis, grounded theory, IPA, framework analysis, or content analysis. Inter-rater reliability (Cohen's κ, Krippendorff's α). NLP-assisted exploration for large corpora — with required validation against hand-coding. |
 | `research-brainstorm` | Generates 15-25 research ideas via question-form variations, cross-field grafts, and contrarian moves. Scores them. Sharpens the top 3 into study sketches. Pushes past the obvious next study. |
@@ -198,7 +201,7 @@ research-co-pilot/
 
 ### Slash commands (Claude Code only)
 
-`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/analyze`, `/code-themes`, `/brainstorm`, `/cite`, `/survey`, `/peer-review`.
+`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/cite`, `/survey`, `/peer-review`.
 
 ---
 

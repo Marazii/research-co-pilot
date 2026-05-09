@@ -18,6 +18,7 @@ What part of your research can I help with?
 
 📖  /lit-review       — Fact-checked literature review and synthesis
 🧭  /methodology      — Quant or qual research design advisor
+⚖️   /ethics           — Stress-test your protocol like an IRB / REC / HREC
 📊  /analyze          — Data cleaning, statistics, modeling, scripting
 🏷️   /code-themes     — Qualitative theme coding + NLP-assisted analysis
 💡  /brainstorm       — Generate and pressure-test research ideas
@@ -33,7 +34,8 @@ Or just describe what you need (e.g., "I have 12 interview transcripts and want 
 
 If the user's input contains:
 - "literature", "lit review", "sources on", "what does the research say" → invoke `literature-review` skill.
-- "method", "design", "RCT", "sample size", "validity", "IRB", "pre-register" → invoke `methodology-advisor` skill.
+- "method", "design", "RCT", "sample size", "validity", "pre-register" → invoke `methodology-advisor` skill.
+- "ethics", "ethical", "IRB", "REC", "HREC", "ethics committee", "informed consent", "vulnerable population", "ethics statement", "Belmont", "Helsinki" → invoke `ethics-committee` skill.
 - "clean data", "analyze", "regression", "stats", "Python", "R", "visualize" → invoke `data-analysis` skill.
 - "code", "themes", "transcripts", "qualitative", "thematic", "grounded theory" → invoke `qualitative-coding` skill.
 - "brainstorm", "ideas", "what should I study", "topic ideas" → invoke `research-brainstorm` skill.
