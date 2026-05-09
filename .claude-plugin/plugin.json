@@ -1,0 +1,26 @@
+{
+  "name": "research-mentor",
+  "description": "Comprehensive research assistant — literature review, methodology design, data analysis, qualitative coding, brainstorming, citations, survey design, and peer review. For academic and applied research.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/marazii/research-mentor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marazii/research-mentor.git"
+  },
+  "keywords": [
+    "research",
+    "academic",
+    "literature-review",
+    "methodology",
+    "statistics",
+    "qualitative",
+    "thematic-analysis",
+    "peer-review",
+    "citations",
+    "survey-design"
+  ],
+  "author": {
+    "name": "Maya Arazi"
+  }
+}

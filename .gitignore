@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Temporary build artifacts (the dist/ zips ARE committed — they're the claude.ai deliverable)
+*.tmp
+
+# Local Claude Code state
+.claude/worktrees/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+
+# Node (if any tooling is added later)
+node_modules/
+
+# OS junk
+Thumbs.db
