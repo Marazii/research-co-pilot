@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.4.1] — 2026-05-10
+
+### Changed
+- Plugin and marketplace descriptions reframed from "research assistant" to "research co-pilot" to align with the tool's stated philosophy. The plugin is named `research-co-pilot` because it's a *peer collaborator*, not a subservient assistant or hierarchical mentor — the descriptions now reflect that consistently.
+- README opening: "A Claude assistant for the entire research lifecycle" → "A Claude co-pilot for the entire research lifecycle".
+- GitHub repo description updated to match.
+- Marketplace + plugin descriptions also refreshed to mention `talk-builder`, which shipped in 0.4.0 but wasn't in those descriptions yet.
+
 ## [0.4.0] — 2026-05-10
 
 ### Added
@@ -57,7 +65,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/Marazii/research-co-pilot/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/Marazii/research-co-pilot/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Marazii/research-co-pilot/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Marazii/research-co-pilot/compare/v0.1.0...v0.2.0

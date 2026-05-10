@@ -4,14 +4,14 @@
     "name": "Maya Arazi"
   },
   "metadata": {
-    "description": "Maya Arazi's research-assistant plugins for Claude Code. Currently hosts research-co-pilot — a comprehensive lifecycle assistant covering literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, citations, survey design, manuscript drafting, grant writing, replication design, and peer review."
+    "description": "Maya Arazi's research co-pilot plugins for Claude Code. Currently hosts research-co-pilot — a comprehensive research lifecycle co-pilot covering literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, citations, survey design, manuscript drafting, grant writing, replication design, talk building, and peer review."
   },
   "plugins": [
     {
       "name": "research-co-pilot",
       "source": "./",
-      "description": "Comprehensive research assistant — literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, manuscript drafting, replication design, grant writing, citations, survey design, and peer review.",
-      "version": "0.4.0",
+      "description": "Comprehensive research co-pilot — literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, manuscript drafting, replication design, grant writing, talk building, citations, survey design, and peer review.",
+      "version": "0.4.1",
       "category": "research",
       "keywords": [
         "research",
