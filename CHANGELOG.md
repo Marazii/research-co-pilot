@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-05-10
+
+### Added
+- New skill `talk-builder` — turns one or more papers into a complete academic talk: outline, per-slide content, speaker notes, opening hook, single take-home message, backup slides for Q&A, rehearsal plan, and accessibility/inclusivity guidance. Adapts to talk length (3-min lightning to 90-min defense), audience, format (contributed / lightning / invited / plenary / keynote / defense / job talk / public lecture / course lecture), and discipline conventions (sciences, social sciences, CS/ML/HCI, medicine, education, humanities, law, math). Produces deck-platform-agnostic outline plus optional Marp / Quarto / reveal.js / Beamer stubs.
+- New slash command `/talk`.
+- `/research` router updated with the new command and routing keywords.
+- README tables and file tree updated.
+
 ## [0.3.0] — 2026-05-10
 
 ### Added
@@ -49,7 +57,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Marazii/research-co-pilot/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Marazii/research-co-pilot/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Marazii/research-co-pilot/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Marazii/research-co-pilot/releases/tag/v0.1.0

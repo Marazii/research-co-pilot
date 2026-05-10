@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
 
@@ -30,6 +30,7 @@ Same skills, same behavior, two surfaces.
 | Drafting the manuscript | **manuscript-drafter** | "write the intro", "draft the discussion", "write the abstract" |
 | Replicating someone else's study | **replication-designer** | "design a replication of X", "is this finding robust?" |
 | Funding the work | **grant-writer** | "draft my specific aims", "NSF broader impacts", "ERC synopsis" |
+| Presenting it | **talk-builder** | "turn this paper into a 12-min conference talk", "job talk outline", "thesis defense slides" |
 | Formatting references | **citation-formatter** | "format these in APA", "fix my bibliography" |
 | Getting feedback | **peer-review** | "review my paper", "fact-check this draft" |
 
@@ -170,6 +171,7 @@ research-co-pilot/
 │   ├── manuscript-drafter/
 │   ├── replication-designer/
 │   ├── grant-writer/
+│   ├── talk-builder/
 │   ├── citation-formatter/
 │   ├── survey-design/
 │   └── peer-review/
@@ -207,6 +209,7 @@ research-co-pilot/
 | `manuscript-drafter` | Drafts long-form manuscript sections (abstract, intro, related work, methods, results, discussion, limitations, conclusion) from your methodology and analysis outputs. Cites only from your bibliography; flags every claim that needs a source as `[CITATION NEEDED]`. Won't embellish findings. Adapts to target-journal structure and word limits. |
 | `replication-designer` | Designs direct, conceptual, generalization, or robustness replications. Extracts the original spec, justifies every deviation, computes adequate replication power (often 2-3× original N), pre-registers, and pre-specifies what counts as replication success. Includes multi-site logistics for Many-Labs-style work. |
 | `grant-writer` | Drafts proposal sections (Specific Aims, Significance, Innovation, Approach, Broader Impacts, DMP, lay summary, biosketch, budget justification) tuned to NIH (R01/R21/F31/K), NSF (Standard / CAREER / GRFP), ERC (Starting / Consolidator / Advanced), Wellcome, Horizon Europe, or foundation grants. Won't overpromise. Honest about scheme fit. |
+| `talk-builder` | Turns one or more papers into an academic talk — outline, per-slide content, speaker notes, opening hook, single take-home message, backup slides for Q&A, and rehearsal plan. Adapts to length (3-min lightning to 90-min defense), audience (specialists / general / cross-disciplinary / clinical / public), format (contributed / lightning / invited / plenary / keynote / defense / job talk / public lecture / course lecture), and discipline conventions. Produces deck-platform-agnostic outline plus optional Marp / Quarto / reveal.js / Beamer stubs. |
 | `citation-formatter` | APA 7, MLA 9, Chicago (NB and AD), Harvard, Vancouver, IEEE, AMA, journal-specific. Verifies DOIs, handles edge cases (preprints, datasets, software, AI tools). Generates BibTeX/RIS. Document-wide consistency check. |
 | `survey-design` | Question wording, scale choice, ordering effects, response burden. Recommends validated instruments rather than inventing new ones. Includes a pilot plan (cognitive interviews + quantitative pilot). Translation guidance. |
 | `peer-review` | Multi-mode rigorous review: paper verdict, homework grading, committee panel, fact-check audit, plagiarism check, draft thinking-partner, post-review iterate. Adapts to the work's academic domain. |
@@ -223,7 +226,7 @@ research-co-pilot/
 
 ### Slash commands (Claude Code only)
 
-`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/draft`, `/grant`, `/replicate`, `/cite`, `/survey`, `/peer-review`.
+`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/draft`, `/grant`, `/replicate`, `/talk`, `/cite`, `/survey`, `/peer-review`.
 
 ---
 

@@ -25,6 +25,7 @@ What part of your research can I help with?
 ✍️   /draft            — Draft manuscript sections from your methodology + analysis
 🔁  /replicate        — Design a replication of an existing study
 💰  /grant            — Draft grant-proposal sections (NSF, NIH, ERC, Wellcome, etc.)
+🎤  /talk             — Turn a paper into a conference talk (outline + slides + speaker notes)
 📝  /cite             — Format citations and bibliographies (APA, MLA, etc.)
 📋  /survey           — Design rigorous surveys and questionnaires
 🧪  /peer-review      — Rigorous academic peer review of a paper or thesis
@@ -45,6 +46,7 @@ If the user's input contains:
 - "draft my paper", "write the intro", "write the methods section", "draft the discussion", "write the abstract", "manuscript draft" → invoke `manuscript-drafter` skill.
 - "replicate", "replication", "registered replication", "many-labs", "is this finding robust" → invoke `replication-designer` skill.
 - "grant", "specific aims", "NSF", "NIH", "ERC", "Wellcome", "Horizon Europe", "fellowship application", "broader impacts", "lay summary", "biosketch" → invoke `grant-writer` skill.
+- "turn paper into talk", "presentation outline", "slides for my talk", "conference talk", "lecture outline", "academic presentation", "speaker notes", "thesis defense talk", "job talk", "keynote", "invited talk", "lightning talk", "elevator pitch of my paper" → invoke `talk-builder` skill.
 - "cite", "citation", "bibliography", "APA", "MLA", "Chicago", "BibTeX" → invoke `citation-formatter` skill.
 - "survey", "questionnaire", "Likert", "question wording" → invoke `survey-design` skill.
 - "review my paper", "peer review", "feedback on my draft" → invoke `peer-review` skill.
