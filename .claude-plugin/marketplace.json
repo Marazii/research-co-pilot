@@ -10,17 +10,21 @@
     {
       "name": "research-co-pilot",
       "source": "./",
-      "description": "Comprehensive research assistant — literature review, methodology, data analysis, qualitative coding, brainstorming, citations, survey design, and peer review.",
-      "version": "0.1.0",
+      "description": "Comprehensive research assistant — literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, manuscript drafting, replication design, grant writing, citations, survey design, and peer review.",
+      "version": "0.2.0",
       "category": "research",
       "keywords": [
         "research",
         "academic",
         "literature-review",
         "methodology",
+        "ethics-review",
         "statistics",
         "qualitative",
         "thematic-analysis",
+        "manuscript-drafting",
+        "replication",
+        "grant-writing",
         "peer-review",
         "citations",
         "survey-design"
