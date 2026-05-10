@@ -3,6 +3,9 @@
   "owner": {
     "name": "Maya Arazi"
   },
+  "metadata": {
+    "description": "Maya Arazi's research-assistant plugins for Claude Code. Currently hosts research-co-pilot — a comprehensive lifecycle assistant covering literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, citations, survey design, manuscript drafting, grant writing, replication design, and peer review."
+  },
   "plugins": [
     {
       "name": "research-co-pilot",

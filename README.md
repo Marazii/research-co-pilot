@@ -1,5 +1,10 @@
 # research-co-pilot
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
+[![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
+
 A Claude assistant for the entire research lifecycle — from picking a question through final peer review. Designed for academic researchers (graduate students, postdocs, faculty) and applied researchers (UX, policy, public health, data science) who want a rigorous collaborator that respects methodological standards instead of generating plausible-looking output.
 
 Works in two places:
@@ -22,7 +27,10 @@ Same skills, same behavior, two surfaces.
 | Designing instruments | **survey-design** | "is this question biased?", "find a validated scale for X" |
 | Analyzing quantitative data | **data-analysis** | "clean this dataset", "fit a regression", "run a power analysis" |
 | Analyzing qualitative data | **qualitative-coding** | "code these transcripts", "build a codebook", "find themes" |
-| Writing it up | **citation-formatter** | "format these in APA", "fix my bibliography" |
+| Drafting the manuscript | **manuscript-drafter** | "write the intro", "draft the discussion", "write the abstract" |
+| Replicating someone else's study | **replication-designer** | "design a replication of X", "is this finding robust?" |
+| Funding the work | **grant-writer** | "draft my specific aims", "NSF broader impacts", "ERC synopsis" |
+| Formatting references | **citation-formatter** | "format these in APA", "fix my bibliography" |
 | Getting feedback | **peer-review** | "review my paper", "fact-check this draft" |
 
 Every skill is grounded in research methods literature and refuses common AI failure modes — no fabricated citations, no p-hacking, no glossed-over disagreement between sources, no qualitative "themes" without an audit trail.
@@ -159,20 +167,29 @@ research-co-pilot/
 │   ├── data-analysis/
 │   ├── qualitative-coding/
 │   ├── research-brainstorm/
+│   ├── manuscript-drafter/
+│   ├── replication-designer/
+│   ├── grant-writer/
 │   ├── citation-formatter/
 │   ├── survey-design/
 │   └── peer-review/
 ├── agents/                   # Subagents (Claude Code only)
 │   ├── source-finder.md      # parallel reading of many academic sources
 │   ├── data-cruncher.md      # heavy compute in isolation
-│   └── transcript-coder.md   # bulk qualitative processing
+│   ├── transcript-coder.md   # bulk qualitative processing
+│   ├── manuscript-drafter.md # long-form drafting in isolation
+│   └── stats-validator.md    # independent second-look on a colleague's analysis
 ├── commands/                 # Slash commands (Claude Code only)
 │   ├── research.md           # /research — entry-point router
 │   └── ...                   # /lit-review, /methodology, /analyze, etc.
 ├── dist/                     # Built upload bundles for claude.ai
 │   └── *.zip                 # one zip per skill, SKILL.md at archive root
+├── docs/
+│   └── philosophy.md         # design choices and what the plugin won't do
 ├── scripts/
 │   └── build-zips.sh         # rebuild dist/ after editing skills
+├── CHANGELOG.md
+├── SECURITY.md
 ├── LICENSE                   # MIT
 └── README.md
 ```
@@ -187,6 +204,9 @@ research-co-pilot/
 | `data-analysis` | End-to-end quantitative work in Python or R: cleaning, EDA, statistical testing, modeling (regression, mixed-effects, predictive, time series, survival), assumption diagnostics, sensitivity analyses, visualization, reproducible scripts. |
 | `qualitative-coding` | Codebook development and application using thematic analysis, grounded theory, IPA, framework analysis, or content analysis. Inter-rater reliability (Cohen's κ, Krippendorff's α). NLP-assisted exploration for large corpora — with required validation against hand-coding. |
 | `research-brainstorm` | Generates 15-25 research ideas via question-form variations, cross-field grafts, and contrarian moves. Scores them. Sharpens the top 3 into study sketches. Pushes past the obvious next study. |
+| `manuscript-drafter` | Drafts long-form manuscript sections (abstract, intro, related work, methods, results, discussion, limitations, conclusion) from your methodology and analysis outputs. Cites only from your bibliography; flags every claim that needs a source as `[CITATION NEEDED]`. Won't embellish findings. Adapts to target-journal structure and word limits. |
+| `replication-designer` | Designs direct, conceptual, generalization, or robustness replications. Extracts the original spec, justifies every deviation, computes adequate replication power (often 2-3× original N), pre-registers, and pre-specifies what counts as replication success. Includes multi-site logistics for Many-Labs-style work. |
+| `grant-writer` | Drafts proposal sections (Specific Aims, Significance, Innovation, Approach, Broader Impacts, DMP, lay summary, biosketch, budget justification) tuned to NIH (R01/R21/F31/K), NSF (Standard / CAREER / GRFP), ERC (Starting / Consolidator / Advanced), Wellcome, Horizon Europe, or foundation grants. Won't overpromise. Honest about scheme fit. |
 | `citation-formatter` | APA 7, MLA 9, Chicago (NB and AD), Harvard, Vancouver, IEEE, AMA, journal-specific. Verifies DOIs, handles edge cases (preprints, datasets, software, AI tools). Generates BibTeX/RIS. Document-wide consistency check. |
 | `survey-design` | Question wording, scale choice, ordering effects, response burden. Recommends validated instruments rather than inventing new ones. Includes a pilot plan (cognitive interviews + quantitative pilot). Translation guidance. |
 | `peer-review` | Multi-mode rigorous review: paper verdict, homework grading, committee panel, fact-check audit, plagiarism check, draft thinking-partner, post-review iterate. Adapts to the work's academic domain. |
@@ -198,10 +218,12 @@ research-co-pilot/
 | `source-finder` | Reading >5 academic sources in parallel without bloating the main conversation. Returns structured digests with verified citations. |
 | `data-cruncher` | Heavy computation, many model variants, simulations, sensitivity grids — in isolation. Returns a tight results summary instead of raw output. |
 | `transcript-coder` | Bulk cleaning, anonymization, and code-application across many transcripts. Returns coded JSON + a summary instead of full transcript text. |
+| `manuscript-drafter` | Long-form drafting (whole sections or whole papers) in isolation so the parent doesn't get flooded with thousands of words. Returns a structured digest plus the draft as files. |
+| `stats-validator` | Independent second-look on a colleague's analysis. Reads their script + data + report in fresh context (no narrative contamination), re-runs, sensitivity-checks, and returns a tight memo with confidence judgment. |
 
 ### Slash commands (Claude Code only)
 
-`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/cite`, `/survey`, `/peer-review`.
+`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/draft`, `/grant`, `/replicate`, `/cite`, `/survey`, `/peer-review`.
 
 ---
 
@@ -243,6 +265,10 @@ If you add a new skill:
 4. Update this README's table.
 
 ---
+
+## Philosophy
+
+For a longer write-up of the design choices — why each skill encodes specific hard rules, what "rigor over fluency" means in practice, and what the plugin won't do — see [`docs/philosophy.md`](docs/philosophy.md).
 
 ## Caveats and honest limits
 

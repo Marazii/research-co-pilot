@@ -22,6 +22,9 @@ What part of your research can I help with?
 📊  /analyze          — Data cleaning, statistics, modeling, scripting
 🏷️   /code-themes     — Qualitative theme coding + NLP-assisted analysis
 💡  /brainstorm       — Generate and pressure-test research ideas
+✍️   /draft            — Draft manuscript sections from your methodology + analysis
+🔁  /replicate        — Design a replication of an existing study
+💰  /grant            — Draft grant-proposal sections (NSF, NIH, ERC, Wellcome, etc.)
 📝  /cite             — Format citations and bibliographies (APA, MLA, etc.)
 📋  /survey           — Design rigorous surveys and questionnaires
 🧪  /peer-review      — Rigorous academic peer review of a paper or thesis
@@ -39,6 +42,9 @@ If the user's input contains:
 - "clean data", "analyze", "regression", "stats", "Python", "R", "visualize" → invoke `data-analysis` skill.
 - "code", "themes", "transcripts", "qualitative", "thematic", "grounded theory" → invoke `qualitative-coding` skill.
 - "brainstorm", "ideas", "what should I study", "topic ideas" → invoke `research-brainstorm` skill.
+- "draft my paper", "write the intro", "write the methods section", "draft the discussion", "write the abstract", "manuscript draft" → invoke `manuscript-drafter` skill.
+- "replicate", "replication", "registered replication", "many-labs", "is this finding robust" → invoke `replication-designer` skill.
+- "grant", "specific aims", "NSF", "NIH", "ERC", "Wellcome", "Horizon Europe", "fellowship application", "broader impacts", "lay summary", "biosketch" → invoke `grant-writer` skill.
 - "cite", "citation", "bibliography", "APA", "MLA", "Chicago", "BibTeX" → invoke `citation-formatter` skill.
 - "survey", "questionnaire", "Likert", "question wording" → invoke `survey-design` skill.
 - "review my paper", "peer review", "feedback on my draft" → invoke `peer-review` skill.
