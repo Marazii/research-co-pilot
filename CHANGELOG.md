@@ -6,6 +6,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-05-10
+
+### Added
+- `methodology-advisor`: new mandatory **Phase 5 — Creative AI / ML / Big Data extensions**. Every methodology output must now generate at least 5 candidate AI / ML / Big Data extensions across 5 buckets (new data sources, predictive ML, NLP / CV / multimodal, causal ML, generative & simulation), plus one ambitious "stretch" idea — each assessed for fit, data needs, skills, validation, ethical concerns, and reasons to reject. The point is to widen the option space before researchers default to what they know.
+- New section `7. Creative AI / ML / Big Data Extensions` in the methodology output template; sections 7-11 renumbered to 8-12.
+- Added "always force creative-method consideration" as a second core principle.
+
+### Changed
+- `methodology-advisor` description updated to surface the new creative-extensions capability and add trigger phrases ("AI methods for my study", "ML approach", "big data approach", "creative methods").
+
 ## [0.2.0] — 2026-05-10
 
 ### Added
@@ -39,6 +49,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Marazii/research-co-pilot/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Marazii/research-co-pilot/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Marazii/research-co-pilot/releases/tag/v0.1.0
