@@ -3,11 +3,8 @@
   "description": "Comprehensive research assistant — literature review, methodology design, data analysis, qualitative coding, brainstorming, citations, survey design, and peer review. For academic and applied research.",
   "version": "0.1.0",
   "license": "MIT",
-  "homepage": "https://github.com/marazii/research-co-pilot",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/marazii/research-co-pilot.git"
-  },
+  "homepage": "https://github.com/Marazii/research-co-pilot",
+  "repository": "https://github.com/Marazii/research-co-pilot.git",
   "keywords": [
     "research",
     "academic",
