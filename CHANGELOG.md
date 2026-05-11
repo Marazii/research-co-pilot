@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.5.0] — 2026-05-11
+
+### Added
+- `peer-review`: new **`--presentation`** mode for talks and slide decks. Operates on `.pptx` (extracted via `python-pptx`), `.pdf` of slides, Beamer `.tex`, and Marp / Quarto / reveal.js source. Produces:
+  - Per-slide commentary (estimated time, content summary, one-idea-per-slide check, visual-first check, concrete suggested fix).
+  - Talk-level evaluation (take-home message, opening 60 seconds, arc and pacing, closing, audience fit, discipline / venue match, backup-slide suggestions for Q&A, accessibility).
+  - Delivery-readiness verdict register (Ready to deliver / One rehearsal pass needed / Revisions before delivery / Rebuild from outline) — separate from the academic verdict register.
+  - For `.pptx` inputs, an annotated `_REVIEWED.pptx` copy with `--- REVIEWER NOTES ---` blocks appended to each slide's speaker notes (portable across PowerPoint, Keynote, Google Slides, LibreOffice Impress).
+- Composes with all existing modes: `--presentation --paper`, `--presentation --homework`, `--presentation --committee`, `--presentation --draft`, `--presentation --fact-check`.
+- Cross-skill handoff: redirects to `talk-builder` when no slides exist yet.
+
+### Changed
+- `peer-review` description trimmed and refreshed: now lists 5 alternative workflows (was 4), mentions both `.docx` and `.pptx` annotation, adds presentation / slide-deck triggers.
+- `peer-review` Step 1 (mode identification) updated with the new `presentation` workflow and 4 new composition examples.
+- Hard rules and edge cases extended for presentation-specific failure modes (missing context, pure-image slides, vague per-slide commentary, slides-not-yet-built).
+- README peer-review row updated to surface the new mode.
+
 ## [0.4.1] — 2026-05-10
 
 ### Changed
@@ -65,7 +82,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Marazii/research-co-pilot/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/Marazii/research-co-pilot/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/Marazii/research-co-pilot/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Marazii/research-co-pilot/compare/v0.2.0...v0.3.0

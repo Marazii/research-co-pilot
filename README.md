@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
 
@@ -32,7 +32,7 @@ Same skills, same behavior, two surfaces.
 | Funding the work | **grant-writer** | "draft my specific aims", "NSF broader impacts", "ERC synopsis" |
 | Presenting it | **talk-builder** | "turn this paper into a 12-min conference talk", "job talk outline", "thesis defense slides" |
 | Formatting references | **citation-formatter** | "format these in APA", "fix my bibliography" |
-| Getting feedback | **peer-review** | "review my paper", "fact-check this draft" |
+| Getting feedback | **peer-review** | "review my paper", "fact-check this draft", "review my slides for the conference talk" |
 
 Every skill is grounded in research methods literature and refuses common AI failure modes — no fabricated citations, no p-hacking, no glossed-over disagreement between sources, no qualitative "themes" without an audit trail.
 
@@ -212,7 +212,7 @@ research-co-pilot/
 | `talk-builder` | Turns one or more papers into an academic talk — outline, per-slide content, speaker notes, opening hook, single take-home message, backup slides for Q&A, and rehearsal plan. Adapts to length (3-min lightning to 90-min defense), audience (specialists / general / cross-disciplinary / clinical / public), format (contributed / lightning / invited / plenary / keynote / defense / job talk / public lecture / course lecture), and discipline conventions. Produces deck-platform-agnostic outline plus optional Marp / Quarto / reveal.js / Beamer stubs. |
 | `citation-formatter` | APA 7, MLA 9, Chicago (NB and AD), Harvard, Vancouver, IEEE, AMA, journal-specific. Verifies DOIs, handles edge cases (preprints, datasets, software, AI tools). Generates BibTeX/RIS. Document-wide consistency check. |
 | `survey-design` | Question wording, scale choice, ordering effects, response burden. Recommends validated instruments rather than inventing new ones. Includes a pilot plan (cognitive interviews + quantitative pilot). Translation guidance. |
-| `peer-review` | Multi-mode rigorous review: paper verdict, homework grading, committee panel, fact-check audit, plagiarism check, draft thinking-partner, post-review iterate. Adapts to the work's academic domain. |
+| `peer-review` | Multi-mode rigorous review: paper verdict, homework grading, committee panel, fact-check audit, plagiarism check, draft thinking-partner, **presentation feedback** (per-slide commentary on .pptx with annotated copy back), post-review iterate. Adapts to the work's academic domain and to the file format (`.docx` → tracked changes; `.pptx` → speaker-notes annotations). |
 
 ### Subagents (Claude Code only — claude.ai has no equivalent)
 

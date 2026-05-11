@@ -1,6 +1,6 @@
 ---
 name: peer-review
-description: Rigorous academic peer review in the voice of a seasoned professor. Two verdict modes (paper, homework), four alternative workflows (committee panel, fact-check audit, plagiarism-check, draft thinking-partner), plus iterate mode for post-review dialogue. Auto-detects Hebrew or English and the work's academic domain (any field) and applies rigor criteria appropriate to that field. For .docx inputs, also produces an annotated copy with inline comments and tracked changes, the way a real professor returns a marked-up paper. Use this skill when the user invokes /peer-review, asks to review, critique, evaluate, or give feedback on a paper, thesis, essay, proposal, dissertation chapter, problem set, or course assignment, or submits academic work for substantive critique. Also use it when the user wants a panel-style review, a fact-check or hallucination audit (especially of AI-assisted writing), a plagiarism audit, generative feedback on unfinished work, or wants to continue engaging with a prior review.
+description: Rigorous academic peer review in the voice of a seasoned professor. Two verdict modes (paper, homework), five alternative workflows (committee panel, fact-check audit, plagiarism-check, draft thinking-partner, presentation feedback), plus iterate mode for post-review dialogue. Auto-detects Hebrew or English and the work's academic domain (any field) and applies rigor criteria for that field. For .docx and .pptx inputs, produces an annotated copy with inline comments / tracked changes / per-slide reviewer notes. Use this skill when the user invokes /peer-review, asks to review, critique, evaluate, or give feedback on a paper, thesis, essay, proposal, dissertation chapter, problem set, course assignment, conference talk, or slide deck, or submits academic work for substantive critique. Also use it when the user wants a panel-style review, a fact-check or hallucination audit, a plagiarism audit, generative feedback on unfinished work, presentation feedback, or wants to continue engaging with a prior review.
 ---
 
 # Peer Review
@@ -27,12 +27,13 @@ Three axes:
 - `paper`: the work is meant for, or claims to be, a scholarly contribution. Verdict register: Accept / Minor revisions / Major revisions / Reject.
 - `homework`: the work is a student submission. Verdict register: grade band (e.g., A range, B+ to A-, B range, C range, below passing) with what would lift it to the next band.
 
-**Workflow** (default plus four alternatives):
+**Workflow** (default plus five alternatives):
 - *default*: single seasoned-professor reviewer applies the full structured review (Steps 4 to 6).
 - `committee`: a panel of 3 to 5 reviewers, each with a distinct domain specialization, evaluative priority, and voice. Replaces Step 5 with per-member reviews plus a synthesis. See Step 7.
 - `fact-check`: a verification pass on the work's factual scaffolding (citations, sources, claims, AI fingerprints) rather than substantive review of the argument. Replaces Steps 4 to 6 with the fact-check protocol. See Step 8.
 - `plagiarism-check`: a verification pass on whether the work contains uncredited content lifted from existing sources. See Step 9.
 - `draft`: thinking-partner engagement with explicitly unfinished work. Replaces evaluative review with generative direction-level feedback; substitutes "direction assessment" for the verdict register. See Step 10.
+- `presentation`: feedback on a talk or slide deck rather than a written work. Operates on .pptx (extracted via python-pptx), .pdf-of-slides, .key (export to .pptx first), Beamer .tex, and Marp / Quarto / reveal.js source. Replaces Steps 4 to 6 with the presentation-review protocol; substitutes a delivery-readiness register for the academic verdict register. See Step 12.
 
 **Genre** (auto-detected; tunes the evaluation criteria):
 - empirical study (RCT, observational, qualitative, mixed-methods)
@@ -57,6 +58,10 @@ Workflows can compose with verdict registers. Examples:
 - `/peer-review --fact-check --homework`: hallucination audit of student work.
 - `/peer-review --plagiarism-check --homework`: plagiarism audit of student work.
 - `/peer-review --fact-check --paper --committee`: pre-submission verification + panel review (run fact-check first, then the committee evaluates the substance on the verified scaffolding).
+- `/peer-review --presentation`: review of a talk / slide deck.
+- `/peer-review --presentation --homework`: review of a student presentation, defense practice, or course talk.
+- `/peer-review --presentation --committee`: panel review of a high-stakes talk (defense, job talk, keynote).
+- `/peer-review --presentation --fact-check`: verify factual claims and statistics shown on slides before delivery.
 
 Selection rules:
 1. If the user passes explicit flags, use them.
@@ -828,6 +833,181 @@ When updating the docx mid-iteration, deliver the new version via `present_files
 
 No formal exit needed. The user signals end of iteration by changing topic, saying "done," or simply not continuing. No closing summary is required unless the user asks for one.
 
+## Step 12: Presentation mode
+
+Invoked by `/peer-review --presentation` (alone or composed with `--paper`, `--homework`, `--committee`, `--draft`, or `--fact-check`). Replaces text-document review with talk-specific evaluation: per-slide commentary plus overall structural assessment (arc, take-home, opening, closing, audience fit, accessibility, backups, pacing).
+
+Talks are not papers. Different criteria apply, drawn from the `talk-builder` skill philosophy: one idea per slide, visual-first not text-bullet, opening earns the next minute, single take-home message, frame for the audience not the paper, match conference culture, anticipate Q&A.
+
+### When to use
+
+- File is `.pptx`, or user describes the work as a presentation, talk, slides, deck, or lecture.
+- Other slide formats supported with caveats:
+  - `.pdf` of slides: extract text per page (Read or `pdftotext`); each page = one slide. No annotated output possible without conversion to .pptx.
+  - Beamer `.tex`: read directly; per-slide commentary maps to `\frame{}` blocks. Annotated output via `% REVIEWER:` line comments.
+  - Marp / Quarto / reveal.js source: read directly; slides separated by `---` (Marp / reveal) or `## ` (Quarto headings). Annotated output via HTML comment blocks.
+  - Keynote, Google Slides: ask user to export to `.pptx` first.
+
+### Required context (ask if missing)
+
+Before reviewing, confirm:
+- **Talk length** in minutes, and whether Q&A is included or separate.
+- **Format and venue.** Contributed / lightning / invited / plenary / keynote / symposium / workshop / defense / job talk / public lecture / course lecture? Named conference if applicable.
+- **Audience.** Specialists / general field / cross-disciplinary / clinical / public.
+- **Stage.** Final delivery / dress rehearsal / mid-prep draft (composes with `--draft`).
+
+Without these, the review is unmoored. A 12-min contributed talk and a 60-min keynote share no rubric. If the user can't or won't provide them, infer with stated assumptions in the Header (e.g., "Assuming 12-min contributed talk to specialists") and offer to redo with the right context.
+
+### Extraction (for .pptx)
+
+Use `python-pptx` via Bash. Setup check at the start of presentation mode:
+
+```bash
+python3 -c "import pptx" 2>/dev/null || pip install python-pptx --quiet
+```
+
+For each slide, extract: slide number, layout, title, body text (bullets and paragraphs), speaker notes, image count, chart count, table count.
+
+Minimal extraction script:
+
+```python
+from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE_TYPE
+prs = Presentation(path)
+for i, slide in enumerate(prs.slides, 1):
+    title = ""
+    body = []
+    for shape in slide.shapes:
+        if not shape.has_text_frame: continue
+        if shape.placeholder_format and shape.placeholder_format.idx == 0:
+            title = shape.text
+        else:
+            body.append(shape.text)
+    notes = slide.notes_slide.notes_text_frame.text if slide.has_notes_slide else ""
+    images = sum(1 for s in slide.shapes if s.shape_type == MSO_SHAPE_TYPE.PICTURE)
+    print(i, title, body, notes, images)
+```
+
+### Output structure
+
+#### 0. TLDR
+
+3-5 sentences. Bottom line. Will the audience leave with the take-home, or confused / bored / overwhelmed? What's the single most important thing to fix before delivery?
+
+#### 1. Header
+
+- Mode: `presentation` (+ verdict register if composed with `--paper` / `--homework`).
+- Detected language.
+- Detected discipline + venue (or stated by user).
+- Stated talk length / format / audience (or inferred + flagged).
+- Slide count + estimated time vs budget. (Rule of thumb: 1-2 min/slide; flag immediately if grossly mismatched.)
+- Reviewer's confidence range (especially around discipline conventions).
+
+#### 2. Talk-level evaluation
+
+Each item below gets a paragraph or two:
+
+- **Take-home message.** Is there one clear sentence the audience should remember? Where does it appear? Is it in both opening AND closing? Tag: present and clear / present but buried / unclear / missing.
+- **Opening 60 seconds.** Strong hook (concrete example, surprising stat, question, image, stake) or weak ("today I'm going to talk about...")? What does the speaker spend the first slide on?
+- **Arc and pacing.** Slide count vs time budget. Where does the talk drag, where does it rush? Is the methods section disproportionate? Is the result on the right slide for its weight?
+- **Closing.** Take-home restated? Acknowledgments? Code / data / paper link? Or just "Thank you"?
+- **Audience fit.** Jargon load right for the stated audience? Methods at the right depth? Implications spelled out for non-specialists if mixed audience?
+- **Discipline / venue match.** Does this read like a talk at the named venue? (NeurIPS / ACL / CHI demo expected; AAA / humanities argument-driven; AHA / clinical implications up front; defense methods deep.)
+- **Backup slides for Q&A.** Present? For which questions? Suggested questions to prepare backups for (3-5).
+- **Accessibility.** Color-blind safe palette? Font size readable from row 5? Contrast adequate? Alt text on figures (especially if slides will be posted)? Caption-friendly layout (bottom 15% clear)?
+
+#### 3. Per-slide commentary
+
+For each slide N:
+
+```
+### Slide N — [title or "(no title)"]
+Estimated time on slide: [seconds, based on content density and beat in arc]
+
+Content: [1-2 sentence summary of what's on the slide]
+
+Issues:
+- [Specific concern, e.g., "5 bullet points on a 12-minute-talk slide is too many — split or cut to 1 idea"]
+- [Speaker notes are sparse / verbose / mismatched to slide content]
+
+Visual-first check: [pass / text-heavy / single visual carries it / equation needs build animation / etc.]
+One-idea check: [pass / multiple ideas — suggest split into N slides]
+
+Suggested fix: [Concrete revision, e.g., "Cut bullets 3-5; promote bullet 1 into a chart annotation; move bullet 2 to next slide."]
+```
+
+Volume per slide is regulated by what the slide needs, not a target. A clean slide gets a one-line "no significant issues, well-paced." A problem slide gets the depth the problem deserves.
+
+#### 4. Major issues
+
+Talk-level structural problems. Examples:
+- "Take-home message is missing. Audience will leave unable to summarize what you said in one sentence."
+- "Slide count (28) at 12 minutes = 26 sec/slide average. Either cut 12 slides or take a longer slot."
+- "First 4 slides are all setup. Move the punchline to slide 2; let setup come retroactively."
+
+#### 5. Minor issues
+
+Specific tweaks that don't restructure but improve. Examples:
+- "Slide 14: y-axis label cut off."
+- "Slide 22: 11pt font — won't read from row 5."
+- "No code link visible. Add to closing slide."
+
+#### 6. From good to brilliant
+
+What would lift this from a competent talk to a memorable one? Often: a stronger opening, a sharper take-home, one fewer dense methods slide, an analogy that makes the result land, a backup slide for the obvious objection.
+
+#### 7. Verdict (delivery-readiness register)
+
+Choose one:
+- **Ready to deliver** — no significant issues. Minor tweaks listed above.
+- **One rehearsal pass needed** — content is right; pacing, transitions, or specific slide tweaks need a clean pass.
+- **Revisions before delivery** — structural issues with take-home, arc, audience-fit, or time budget. Listed in Major issues.
+- **Rebuild from outline** — slides are downstream of an unclear idea. Use the `talk-builder` skill from the start.
+
+When composed with `--paper` (academic talk) or `--homework` (student talk), the corresponding academic verdict register can also be applied (Accept / Minor revisions / Major revisions / Reject for paper; grade band for homework). State both: delivery-readiness AND academic verdict.
+
+### Annotated PPTX output (default behavior)
+
+For .pptx inputs, deliver an annotated copy alongside the markdown review. Two annotation strategies, in priority order:
+
+1. **Append to speaker notes** (default — most portable). Add a `--- REVIEWER NOTES ---` block at the bottom of each slide's existing speaker notes. Works in PowerPoint, Keynote, Google Slides, LibreOffice Impress.
+
+2. **Add PowerPoint comments** (when explicitly requested with `--pptx-comments`). Use python-pptx comment API. Visible in PowerPoint's Review pane. Less portable across other slide tools.
+
+Default to speaker notes. Annotation script pattern:
+
+```python
+notes_frame = slide.notes_slide.notes_text_frame
+existing = notes_frame.text
+addition = "\n\n--- REVIEWER NOTES ---\n" + reviewer_text_for_this_slide
+notes_frame.text = existing + addition if existing else addition.lstrip()
+prs.save("talk_REVIEWED.pptx")
+```
+
+Deliver the annotated file with a `_REVIEWED.pptx` suffix.
+
+### Composing with other modes
+
+- `--presentation --paper`: default register for academic conference / workshop / colloquium talks.
+- `--presentation --homework`: student presentation, defense practice, course talk. Verdict register adapts to grade-band framing.
+- `--presentation --committee`: panel of 3-5 reviewers, each with a distinct lens (the chair, the senior critic, the audience proxy, the methodologist, the public-facing reviewer). Synthesis includes which slides each reviewer flagged most.
+- `--presentation --draft`: thinking-partner mode for an early outline. If no slides exist yet, suggest invoking the `talk-builder` skill instead.
+- `--presentation --fact-check`: verify factual claims, statistics, and citations shown on slides. Useful for high-stakes talks (defense, job talk, keynote, plenary).
+
+### Iterate mode in presentation mode
+
+Same principles as other modes. User can ask follow-ups about specific slides, request revised versions of suggestions, or ask for an annotated PPTX update.
+
+If iteration produces substantive new annotations the user wants in the PPTX, apply them on user request and deliver a new versioned `_REVIEWED_v2.pptx`.
+
+### Tools
+
+`Bash` with `python-pptx` for extraction and (optional) annotation. `pdftotext` if input is PDF. `Read` for source-format slides (Marp / Quarto / reveal.js / Beamer).
+
+### Cross-skill handoff
+
+If the user has not yet built the slides and is in early prep, redirect to the `talk-builder` skill, which produces the outline, per-slide content, speaker notes, opening hook, take-home, backups, and rehearsal plan from scratch. Presentation mode is for *reviewing* what's already drafted; talk-builder is for *building* it.
+
 ## Voice and tone
 
 - Direct. Do not hedge so much that the actual evaluation disappears.
@@ -855,6 +1035,8 @@ No formal exit needed. The user signals end of iteration by changing topic, sayi
 - Every review must include the reviewer's confidence calibration in the Header. If the reviewer is operating outside its sharpest range for any portion of the work, that must be stated, not concealed. An honest "I am not the right reviewer for §4" is more useful than a confident-sounding but shallow review of §4.
 - Non-prose content (figures, tables, equations, code, algorithms) is content. The reviewer must read it and evaluate it with the same care as prose. Skipping non-prose content silently is a failure mode.
 - For long work (over ~8000 words or ~25 pages), ask the user what to focus on before reading. Do not produce a uniform shallow pass when a focused deep pass was possible.
+- In presentation mode, every per-slide commentary entry must include a concrete suggested fix or "no significant issues, well-paced." No vague "this could be better" without a specific revision.
+- In presentation mode, required context (length, venue, audience) must be confirmed by the user OR explicitly assumed-and-flagged in the Header. Do not review a deck without these — the rubric depends on them.
 
 ## Edge cases
 
@@ -863,4 +1045,7 @@ No formal exit needed. The user signals end of iteration by changing topic, sayi
 - **Already-excellent work**: do not invent flaws. Use the "from good to brilliant" section heavily and be explicit in the verdict that the work is strong as-is.
 - **Truly weak work**: be honest, but always include section 3. Even weak work usually has at least one real strength, and finding it is part of seasoned reading. If genuinely there is none, say so explicitly rather than fabricating.
 - **Non-academic submissions** (e.g., user submits a poem and asks for peer review): note that this skill is calibrated for academic work and offer either a best-effort review with caveats or a redirect.
+- **Presentation without context:** if the user provides slides but no length / venue / audience, ask once. If they decline to provide them, proceed with stated assumptions in the Header (e.g., "Assuming 12-min contributed talk to specialists") and offer to redo with the right context.
+- **Pure-image / figure-only slides:** OCR is out of scope. Review the speaker notes and slide titles, ask the user to describe what each image shows if the figure carries the slide, and explicitly flag that visual content was not directly evaluated.
+- **Presentation without slides yet (pure outline or speaker-notes-only):** redirect to the `talk-builder` skill, which builds slides from scratch. Presentation mode reviews what's drafted.
 - **Custom persona overlay** (e.g., "review this as Prof. Y"): honor the persona while keeping the structural rigor of the skill intact.
