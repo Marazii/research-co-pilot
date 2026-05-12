@@ -1,6 +1,6 @@
 ---
 name: peer-review
-description: Rigorous academic peer review in the voice of a seasoned professor. Two verdict modes (paper, homework), five alternative workflows (committee panel, fact-check audit, plagiarism-check, draft thinking-partner, presentation feedback), plus iterate mode for post-review dialogue. Auto-detects Hebrew or English and the work's academic domain (any field) and applies rigor criteria for that field. For .docx and .pptx inputs, produces an annotated copy with inline comments / tracked changes / per-slide reviewer notes. Use this skill when the user invokes /peer-review, asks to review, critique, evaluate, or give feedback on a paper, thesis, essay, proposal, dissertation chapter, problem set, course assignment, conference talk, or slide deck, or submits academic work for substantive critique. Also use it when the user wants a panel-style review, a fact-check or hallucination audit, a plagiarism audit, generative feedback on unfinished work, presentation feedback, or wants to continue engaging with a prior review.
+description: Rigorous academic peer review in the voice of a seasoned professor. Two verdict modes (paper, homework), five alternative workflows (committee panel, fact-check audit, plagiarism-check, draft thinking-partner, presentation feedback), plus iterate mode for post-review dialogue. Auto-detects Hebrew or English and the work's academic domain (any field) and applies rigor criteria for that field. Annotates source documents at the relevant text / shape / page locations and returns a reviewed file: .docx (inline comments + tracked changes), .pdf (sticky notes + highlights), .pptx (native comments on slides / shapes), .tex (LaTeX reviewer comments). Use this skill when the user invokes /peer-review, asks to review, critique, evaluate, or give feedback on a paper, thesis, essay, dissertation chapter, problem set, course assignment, conference talk, or slide deck. Also for panel-style review, fact-check or plagiarism audit, generative feedback on unfinished work, presentation feedback, or continuing a prior review.
 ---
 
 # Peer Review
@@ -205,9 +205,22 @@ Findings about figures, tables, equations, code blocks, algorithms, and other no
 
 When the work has substantial non-prose content, the Header should reflect this (see content-type inventory). The reviewer must read non-prose content with the same care as prose; per-type evaluation criteria are in `references/content-types.md`.
 
-## Step 6: Annotate the source document (for .docx inputs)
+## Step 6: Annotate the source document (multi-format)
 
-If the user submitted a Word document (.docx), produce an annotated copy in addition to the structured review. Real peer review by a seasoned professor produces both: a marked-up paper and a top-level review letter. This skill mirrors that.
+Whenever the user submits a source file in a supported format, produce an annotated copy in addition to the structured review. Real peer review by a seasoned professor returns both: a marked-up source and a top-level review letter. This skill mirrors that across formats.
+
+Supported formats and their native annotation mechanisms:
+
+| Format | Reviewed-file output | Annotation mechanism |
+|---|---|---|
+| `.docx` | `_REVIEWED.docx` | Inline comments anchored to text spans + tracked changes |
+| `.pdf` | `_REVIEWED.pdf` | Sticky-note comments anchored at text locations + highlights + (optional) strikethrough |
+| `.pptx` | `_REVIEWED.pptx` | Native PowerPoint comments anchored to specific slides and shapes |
+| `.tex` | `_REVIEWED.tex` | `% REVIEWER:` line comments immediately above the relevant line, optionally `\todo{}` (todonotes) or `changes`-package markup |
+
+**Anchoring is the point.** A reviewed file with comments anchored at the wrong places is worse than no annotated file at all. Every annotation must attach at the location it refers to: a specific text span (docx, pdf), a specific shape on a specific slide (pptx), the line above the relevant LaTeX code (tex). Bulk-appending all comments at the end of the document is not acceptable.
+
+### Mechanics — DOCX
 
 Use the docx skill at `/mnt/skills/public/docx/SKILL.md` for the mechanics (opening, adding comments, applying tracked changes, repacking, validating). This peer-review skill is responsible for deciding *what* to annotate; the docx skill provides *how*.
 
@@ -295,11 +308,97 @@ If verification fails for any annotation and cannot be fixed, deliver the docx w
 - Deliver the structured review in chat as text.
 - Deliver the annotated .docx file via the `present_files` tool so the user can download and open it in Word or Google Docs.
 
-### Non-docx inputs
+### Mechanics — PDF
 
-For plain text, PDF, or pasted content, produce only the structured review. Sections 4 and 5 should reference exact passages (with quoted snippets or location markers like "section 3, paragraph 2") so the author can find them in their original document.
+PDFs do not have "tracked changes" the way Word does, but they do have a rich native annotation layer that renders in every PDF reader. Use `PyMuPDF` (the `fitz` library).
 
-For PDF inputs specifically, offer the user the option of converting to docx first if they want inline annotations, but do not block on this.
+Setup check at the start of PDF annotation:
+
+```bash
+python3 -c "import fitz" 2>/dev/null || pip install pymupdf --quiet
+```
+
+For each finding (major issue, minor issue, brilliance note, line-edit suggestion) that has a specific textual referent in the PDF:
+
+1. Search for the exact text span using `page.search_for(quoted_phrase)`. Search for a verbatim phrase that uniquely locates the passage; if the phrase repeats, narrow with surrounding context.
+2. Add a highlight annotation over the located rectangles: `page.add_highlight_annot(rects)`.
+3. Attach the reviewer comment to the annotation via `annot.set_info(content=comment_text)` and `annot.update()`. The comment is visible as a sticky-note popup on hover/click in any PDF reader.
+4. For terminological imprecision or wording the reviewer would change, also add a strikethrough annotation (`page.add_strikeout_annot`) at the relevant rectangles, with the suggested replacement in the comment text. PDF cannot apply tracked-change-style replacements directly, but the strikethrough + comment communicates the same revision intent.
+5. For section-level or whole-page observations not tied to a specific phrase, add a text annotation at a margin point: `page.add_text_annot(point, comment_text)`. Place at the top-left of the relevant region so it doesn't obscure content.
+
+Reviewer attribution: set `annot.set_info(title="Reviewer")` (or the specified persona) so all reviewer annotations are filterable in Acrobat / Preview.
+
+Pattern:
+
+```python
+import fitz
+doc = fitz.open(path)
+for page in doc:
+    for finding in findings_for_this_page:
+        rects = page.search_for(finding["anchor_text"])
+        if rects:
+            highlight = page.add_highlight_annot(rects)
+            highlight.set_info(title="Reviewer", content=finding["comment"])
+            highlight.update()
+        else:
+            # Anchor text not found verbatim — drop a margin text annotation
+            page.add_text_annot(fitz.Point(40, 40), finding["comment"]).set_info(title="Reviewer")
+doc.save(path.replace(".pdf", "_REVIEWED.pdf"))
+```
+
+If the anchor text cannot be located (PDFs with extracted-from-image text, OCR artifacts, or hyphenation breaks), fall back to a margin text annotation on the relevant page, and note in the structured review's section 4/5 that this specific finding could not be precisely anchored.
+
+Verification before delivery: re-open the saved `_REVIEWED.pdf` and confirm the annotation count matches the count of findings authored. Mismatch = silent failure; surface it.
+
+### Mechanics — PPTX
+
+See Step 12 "Annotated PPTX output" — the presentation mode covers PPTX annotation in detail (native PowerPoint comments anchored to specific slides and shapes). When `.pptx` is submitted to default-mode review (not presentation mode), still use the Step 12 annotation mechanics — comments anchored at shape level, not appended to speaker notes.
+
+### Mechanics — LaTeX
+
+For `.tex` source files, insert reviewer comments as `% REVIEWER:` line comments immediately above the relevant line. Plain line comments work in every TeX editor and don't require additional packages.
+
+```latex
+% REVIEWER: This claim needs a citation. Suggested: Smith (2021).
+The data showed a clear effect on memory consolidation.
+
+% REVIEWER: "Subjects" → "participants" (current journal convention).
+The 247 subjects were recruited from undergraduate courses.
+
+% REVIEWER: This paragraph contradicts the methods description in §3.2. Resolve.
+\subsection{Procedure}
+```
+
+For users who want tracked-change-style markup (e.g., supervisor-style line edits visible inline), offer the `changes` package as a follow-up option with the `--latex-changes` flag:
+
+```latex
+\usepackage[final]{changes}
+\definechangesauthor[name={Reviewer}, color=blue]{rev}
+
+\replaced[id=rev]{participants}{subjects}
+\added[id=rev, comment={citation needed}]{(Smith, 2021)}
+\deleted[id=rev]{ — this clause adds nothing}
+```
+
+Default is `% REVIEWER:` line comments (zero dependencies). The `changes`-package version is opt-in because it requires a `\usepackage` line in the document preamble.
+
+For BibTeX files (`.bib`), apply `% REVIEWER:` comments above the relevant entry the same way.
+
+Deliver as `_REVIEWED.tex` (and `_REVIEWED.bib` if applicable). Verify by line-counting reviewer-comment lines in the output and matching against the count of findings.
+
+### Mechanics — other formats (no inline annotation)
+
+For Markdown, RTF, HTML, ODT, Pages, Google Docs, Jupyter notebooks, plain text, and pasted content, produce only the structured review. Sections 4 and 5 should reference exact passages (with quoted snippets or location markers like "section 3, paragraph 2") so the author can find them in their original document.
+
+For these formats, offer the user the option of converting to a supported format (docx for prose, pptx for slides) if they want anchored inline annotations, but do not block on this.
+
+### Setup
+
+The skill auto-installs the required libraries on first use:
+
+```bash
+python3 -c "import docx, pptx, fitz, lxml" 2>/dev/null || pip install python-docx python-pptx pymupdf lxml --quiet
+```
 
 ## Step 7: Committee mode
 
@@ -966,25 +1065,51 @@ Choose one:
 
 When composed with `--paper` (academic talk) or `--homework` (student talk), the corresponding academic verdict register can also be applied (Accept / Minor revisions / Major revisions / Reject for paper; grade band for homework). State both: delivery-readiness AND academic verdict.
 
-### Annotated PPTX output (default behavior)
+### Annotated PPTX output (native PowerPoint comments)
 
-For .pptx inputs, deliver an annotated copy alongside the markdown review. Two annotation strategies, in priority order:
+For .pptx inputs, deliver an annotated copy alongside the markdown review. Annotations are **native PowerPoint comments anchored to specific slides and, where possible, to specific shapes on each slide** — the same mechanism PowerPoint's "New Comment" button uses. Comments are visible in PowerPoint's Review pane, Keynote's Comments inspector, and Google Slides' comment thread. This is the default and only default behavior; the v0.5.0 "append to speaker notes" behavior has been replaced because it was a workaround rather than the right mechanism.
 
-1. **Append to speaker notes** (default — most portable). Add a `--- REVIEWER NOTES ---` block at the bottom of each slide's existing speaker notes. Works in PowerPoint, Keynote, Google Slides, LibreOffice Impress.
+Anchoring strategy, per finding:
 
-2. **Add PowerPoint comments** (when explicitly requested with `--pptx-comments`). Use python-pptx comment API. Visible in PowerPoint's Review pane. Less portable across other slide tools.
+1. **Slide-level finding** (e.g., "this slide carries too many ideas; split into two"): comment anchored to the slide, no shape.
+2. **Shape-level finding** (e.g., "this bullet contradicts slide 4"; "y-axis label is illegible"; "this figure needs alt-text"): comment anchored to the specific text frame, image, chart, or table shape that the finding refers to.
+3. **Text-run finding** (e.g., a typo or term to revise): comment anchored to the run containing the text, with the suggested replacement in the comment body.
 
-Default to speaker notes. Annotation script pattern:
+PowerPoint native comments are stored as `/ppt/comments/commentN.xml` parts plus a `/ppt/commentAuthors.xml`. python-pptx exposes the package but does not author comments at a high level; use `python-pptx` for opening / iteration and `lxml` to author the comment XML directly, then save via python-pptx.
 
-```python
-notes_frame = slide.notes_slide.notes_text_frame
-existing = notes_frame.text
-addition = "\n\n--- REVIEWER NOTES ---\n" + reviewer_text_for_this_slide
-notes_frame.text = existing + addition if existing else addition.lstrip()
-prs.save("talk_REVIEWED.pptx")
+Setup check:
+
+```bash
+python3 -c "import pptx, lxml" 2>/dev/null || pip install python-pptx lxml --quiet
 ```
 
-Deliver the annotated file with a `_REVIEWED.pptx` suffix.
+Pattern:
+
+```python
+from pptx import Presentation
+from lxml import etree
+from pptx.oxml.ns import qn
+from datetime import datetime
+import zipfile, shutil, os
+
+# Open and iterate; for each finding, locate the target slide and (if shape-level) the target shape.
+# Build a comment XML element with author, timestamp, anchor (slide id; shape id if applicable), and text.
+# Inject the comment XML into the slide's _element tree under <p:cmAuthorLst>/<p:cmLst> via the comment part.
+# Add a relationship from the slide to the comment part if not already present.
+# Save the modified presentation.
+
+prs = Presentation(path)
+# ... build and inject comments per finding ...
+prs.save(path.replace(".pptx", "_REVIEWED.pptx"))
+```
+
+Reviewer attribution: set comment author to "Reviewer" (or the specified persona) in `/ppt/commentAuthors.xml` so all comments are visibly grouped by author in the Review pane.
+
+Verification before delivery: re-open the saved `_REVIEWED.pptx`, walk every slide, count native comments, and confirm the total matches the count of findings authored. Mismatch = silent failure; surface it in the structured review.
+
+Anchoring fallback: if a finding refers to a shape that cannot be uniquely located (e.g., one of three identical placeholder text frames on a templated slide), anchor at the slide level and note the ambiguity in the comment body.
+
+If python-pptx and lxml cannot author comments cleanly in a particular environment, fall back to producing the structured review only (no annotated PPTX) and tell the user why. Do not silently degrade to the old speaker-notes append.
 
 ### Composing with other modes
 
@@ -1037,6 +1162,7 @@ If the user has not yet built the slides and is in early prep, redirect to the `
 - For long work (over ~8000 words or ~25 pages), ask the user what to focus on before reading. Do not produce a uniform shallow pass when a focused deep pass was possible.
 - In presentation mode, every per-slide commentary entry must include a concrete suggested fix or "no significant issues, well-paced." No vague "this could be better" without a specific revision.
 - In presentation mode, required context (length, venue, audience) must be confirmed by the user OR explicitly assumed-and-flagged in the Header. Do not review a deck without these — the rubric depends on them.
+- **Anchor every inline annotation at the location it refers to.** Comments attach to specific text spans (.docx), highlighted text rectangles (.pdf), specific slides or shapes (.pptx native comments), or the line above the relevant LaTeX code (.tex `% REVIEWER:` lines). Bulk-appending all reviewer notes at the end of the document, in a footer, or in a separate "comments section" is not acceptable. If an annotation cannot be precisely anchored (search text not found in PDF, ambiguous shape on a templated slide), fall back to the nearest possible anchor (margin annotation on the right page, slide-level instead of shape-level) and note the imprecision in the comment body — never silently drop the annotation.
 
 ## Edge cases
 

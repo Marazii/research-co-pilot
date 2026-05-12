@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.7.0] — 2026-05-12
+
+### Added
+- `peer-review`: **PDF annotation support.** Submits a `.pdf` and gets back `_REVIEWED.pdf` with sticky-note comments anchored at the exact text location via PyMuPDF's `page.search_for` + `add_highlight_annot` / `add_text_annot` / `add_strikeout_annot`. Works in any PDF reader (Acrobat, Preview, browsers). Annotations carry the "Reviewer" author tag so they're filterable in Acrobat / Preview.
+- `peer-review`: **LaTeX annotation support.** Submits a `.tex` and gets back `_REVIEWED.tex` with `% REVIEWER:` line comments immediately above the relevant line. Optional `--latex-changes` flag for `changes`-package markup (`\added`, `\deleted`, `\replaced`) for tracked-change-style edits. Also handles `.bib` files.
+- `peer-review`: Restructured Step 6 (Annotate the source document) to cover all four supported formats explicitly — `.docx`, `.pdf`, `.pptx`, `.tex` — with a per-format mechanics subsection for each, plus a fallback section for other formats (Markdown, RTF, HTML, ODT, Pages, Google Docs, Jupyter, plain text) which produce a structured review only.
+- `peer-review`: New hard rule on anchoring: every inline annotation must attach at the location it refers to (specific text span, highlighted rectangle, specific shape, line above the relevant code). Bulk-appending all comments at the end of the document is not acceptable. Anchoring failures must fall back to the nearest possible anchor with the imprecision noted in the comment body — never silently dropped.
+
+### Changed (breaking for users on v0.5.0–v0.6.0)
+- `peer-review` PPTX annotation: **switched from "append to speaker notes" default to "native PowerPoint comments anchored to slides / shapes."** Native comments appear in PowerPoint's Review pane (and Keynote / Google Slides comment threads), where reviewers expect them — the same mechanism PowerPoint's "New Comment" button uses. The speaker-notes-append behavior introduced in v0.5.0 was a workaround; this is the right mechanism. Comments are anchored to specific shapes where possible, with slide-level fallback for findings that aren't shape-specific. Author tag "Reviewer" lets users filter by author in the Review pane.
+- `peer-review` frontmatter description refreshed to advertise all four format outputs explicitly.
+- README peer-review row updated.
+
+### Notes for upgraders
+- Re-running an old PPTX review on v0.7.0 will produce a different output file: native comments instead of speaker-notes appendices. Old speaker-notes annotations from prior runs are unaffected (they live in the file, not the skill).
+- PDF and LaTeX support auto-install required libraries (`pymupdf`, `lxml`) on first use; no manual setup required.
+
 ## [0.6.0] — 2026-05-12
 
 ### Changed
@@ -106,7 +123,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/Marazii/research-co-pilot/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Marazii/research-co-pilot/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Marazii/research-co-pilot/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/Marazii/research-co-pilot/compare/v0.4.0...v0.4.1
