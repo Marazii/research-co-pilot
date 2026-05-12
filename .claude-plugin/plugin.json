@@ -1,7 +1,7 @@
 {
   "name": "research-co-pilot",
   "description": "Comprehensive research co-pilot — literature review, methodology, ethics review, data analysis, qualitative coding, brainstorming, manuscript drafting, replication design, grant writing, talk building, citations, survey design, and peer review. A peer collaborator for academic and applied research, not a subservient assistant.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "homepage": "https://github.com/Marazii/research-co-pilot",
   "repository": "https://github.com/Marazii/research-co-pilot.git",
