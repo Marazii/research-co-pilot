@@ -6,6 +6,38 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.8.0] — 2026-05-12
+
+### Changed (substantial overhaul of `manuscript-drafter`)
+
+Based on direct feedback from a senior reviewer who used `manuscript-drafter` to extend a Discussion chapter in Hebrew. The output had value (good ideas, kept existing prose, followed standard structure) but real craft problems (too long, non-academic register, voice mismatch, new methodological ideas not grounded in literature). v0.8.0 addresses each of those problems explicitly.
+
+**F1 — Voice preservation.** New Hard rule 7 plus new **Phase 3 — Extract the manuscript's voice profile (mandatory)** that runs *before* any new drafting. Voice signature captured: sentence length, person/voice, hedge intensity, signature phrases (5+ verbatim), connectors, citation density/style, paragraph length, punctuation habits. Hebrew-specific markers (register tier, gendered forms, classical-vs-contemporary syntax). Voice profile rendered at the top of the working draft and applied to every new paragraph.
+
+**F2 — Length discipline.** New Hard rule 8 plus explicit per-section budgets in Phase 2 (Abstract 150-250; Introduction 800-1500, cap 2000; Related work 1500-2500, cap 3000; Methods 1000-2000, cap 2500; Results 1000-2000, cap 2500; Discussion 1000-1800, cap 2200; Limitations 200-500, cap 600; Conclusion 150-400, cap 500). Defaults to the *low* end of each range. New **Phase 7 Pass C — Compression to budget** runs after first draft and logs every cut.
+
+**F3 — Academic register.** New Hard rule 9 with explicit banned-pattern table (colloquialisms, conversational openers, hedge softeners, vague quantifiers, clichés, contractions, overused sentence-initial interjections). New **Phase 7 Pass D — Register audit** scans the draft for every banned pattern with a replacement table. Hebrew-specific substitutions ("בעצם", "סוג של", "די הרבה", "פשוט", colloquial verbs) included.
+
+**F4 — Literature integration for new ideas.** New Hard rule 10 plus new **Phase 5 — Literature integration for new content**. Distinguishes `[CITATION NEEDED]` (known claim, source presumed to exist but missing from bibliography) from a new `[LITERATURE NEEDED — claim / search terms / likely body of work]` marker for skill-introduced new ideas needing grounding in scholarship. No silent additions.
+
+**F5 — Two-pass ideation → prose workflow.** Restructured Phase 4 into Sub-pass A (ideation outline with `[PULLED] / [RESTRUCTURED] / [NEW]` tags, shown to user before drafting) and Sub-pass B (drafting pass applying voice profile + register rules). Separates the strong part of the skill (ideation) from the weaker part (prose execution) and makes ideation explicitly reviewable.
+
+**F6 — Language-aware behavior.** New Hard rule 11: draft in the language of the existing manuscript. Hebrew → Hebrew academic register; English → English. Voice profile and register rules adapted for the detected language. Auto-detect from manuscript; no explicit flag.
+
+**Phase 7 — Multi-pass refinement (new)** runs after the first prose pass: Compression (Pass C) → Register audit (Pass D) → Voice consistency check (Pass E, comparing random new vs existing paragraphs).
+
+**Phase 8 — Output** expanded to include voice profile, ideation outline, `[CITATION NEEDED]` index, `[LITERATURE NEEDED]` index, source map, word-count-vs-cap table, content-cut-for-length log, register-audit log, voice-consistency-check log.
+
+**Phase 9 — Self-audit** expanded with: voice-profile match check, word-budget compliance, register-audit cleanliness, every-`[NEW]`-grounded-or-marked, language match, Hebrew-specific checks.
+
+### Notes for upgraders
+- The skill now insists on an existing manuscript draft for voice extraction. If none is provided, the skill asks once and flags prominently that voice preservation cannot be enforced.
+- Output documents are longer (now include voice profile, ideation outline, registers and logs) but the drafted prose itself is shorter and tighter.
+- Hebrew users: register substitutions and gendered-form matching are now first-class concerns.
+
+### Deferred to v0.9.0
+- Same rigor pass for `grant-writer` (shares the long-form / register / length risks). Will be done after v0.8.0 is tested in real use.
+
 ## [0.7.0] — 2026-05-12
 
 ### Added
@@ -123,7 +155,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Marazii/research-co-pilot/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Marazii/research-co-pilot/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/Marazii/research-co-pilot/compare/v0.4.1...v0.5.0
