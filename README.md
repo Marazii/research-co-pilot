@@ -6,14 +6,14 @@
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
 [![Cite](https://img.shields.io/badge/cite-CITATION.cff-green.svg)](./CITATION.cff)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.PLACEHOLDER-CONCEPT.svg)](https://doi.org/10.5281/zenodo.PLACEHOLDER-CONCEPT)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20186491.svg)](https://doi.org/10.5281/zenodo.20186491)
 
 <!--
   The DOI badge resolves to the Zenodo concept DOI for this repo, which
-  always points to the latest release. The placeholder is auto-replaced by
-  the update-citation-doi.yml workflow after v0.10.0 mints. If you see
-  PLACEHOLDER-CONCEPT here, the workflow hasn't run yet — see CONTRIBUTING.md
-  § Release process for the manual fallback.
+  always points to the latest release. Version-specific DOI for v0.10.0 is
+  10.5281/zenodo.20186492 (in CITATION.cff identifiers). On future releases,
+  the update-citation-doi.yml workflow auto-updates both — see
+  CONTRIBUTING.md § Release process.
 -->
 
 
