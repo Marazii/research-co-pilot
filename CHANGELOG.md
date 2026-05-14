@@ -6,6 +6,46 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-05-14
+
+**General availability.** Promotes `v0.10.0-rc.1` to stable. Adds the remaining seven example folders, ships the CITATION.cff DOI auto-update workflow, and mints the Zenodo DOI on this tag.
+
+### Added — remaining example folders (7)
+
+- **`examples/replication-designer/`** — input.md (Smith et al. 2018 fictional target paper + direct replication intent) + output.md (full replication design with power calc for 2.5× original N, OSF pre-registration plan, multi-pronged success criterion).
+- **`examples/grant-writer/`** — input.md (NSF Standard Grant, sociology, first-time PI) + output.md (Project Summary + first 3 pages of Project Description with fit-check note + `[PRELIMINARY DATA NEEDED]` and `[REVIEWER CONCERN UNADDRESSED]` markers).
+- **`examples/talk-builder/`** — input.md (paper to 12-min contributed talk at Hypothetical NLP 2026) + output.md (beat-by-beat arc with timing, 13 slides with visual + speaker script + transitions, 5 backup slides for Q&A, rehearsal plan) + **`talk.md` (Marp slide deck stub)** — fulfilling the PRD Marp commitment.
+- **`examples/citation-formatter/`** — input.md (3 messy mixed-style citations) + output.md (APA 7 + Vancouver + BibTeX renderings, plus "could not verify" notes for under-specified fields).
+- **`examples/survey-design/`** — input.md (nurse workplace mental-health stigma survey) + output.md (instrument with 4 validated scales identified, 2 newly-developed scales flagged for cognitive testing, full pilot plan).
+- **`examples/peer-review/`** — input.md + manuscript_excerpt.md + output.md (structured review: M1-M4 major issues, minor issues, brilliance suggestions, Major-revisions verdict, annotated-source description).
+- **`examples/reviewer-response/`** — input/{R1_letter.md, manuscript_draft.md} + output.md (cover letter, point-by-point response to E.1-E.2 + R1.1-R1.4 + R2.1-R2.3 with categorization, change log, self-audit confirming every claimed revision actually appears).
+
+All 14 examples now shipped. `examples/README.md` index updated to reflect completion.
+
+### Added — CITATION.cff DOI auto-update
+
+- **`.github/workflows/update-citation-doi.yml`** — triggers `workflow_run` after `release.yml` completes for a non-prerelease tag (also runnable manually via `workflow_dispatch` with a `tag` input). Polls Zenodo's records API (`/api/records`) for the deposit matching the GitHub repo + tag, with backoff (20 × 30 s = 10 min max wait). When the DOI is available, updates `CITATION.cff`'s `identifiers:` array (concept + version DOI) and `preferred-citation.doi` via `yq`, commits with `[skip ci]`, pushes back to main. Logs a clear warning + falls back to manual procedure if Zenodo doesn't mint within the window.
+- **`CITATION.cff`** — added `identifiers:` array with two entries (concept DOI + version DOI), using placeholder values that the workflow replaces. `preferred-citation.doi` also placeholder-filled. Schema is CFF v1.2 compliant.
+- **`CONTRIBUTING.md` § Release process** — documents the full release flow including the auto-update workflow's behavior and the manual fallback (toggle Zenodo GitHub integration, fetch DOIs from settings, edit CITATION.cff identifiers manually). Also documents `gh workflow run update-citation-doi.yml -f tag=vX.Y.Z` for re-triggering.
+- **README** — added Zenodo DOI badge to the badge row. Initial placeholder URL resolves via the concept DOI once the workflow updates CITATION.cff. HTML comment explains the auto-update mechanism.
+
+### Changed
+
+- Version bumped 0.10.0-rc.1 → 0.10.0 in plugin.json, marketplace.json, README badge, CITATION.cff `version` and `preferred-citation.version`, CITATION.cff `date-released`.
+
+### Notes for upgraders
+
+- The Zenodo DOI badge on the README will show a "PLACEHOLDER-CONCEPT" link until the `update-citation-doi.yml` workflow runs successfully on the v0.10.0 tag. Expect this within 10-15 minutes of tag push.
+- The `update-citation-doi.yml` workflow is idempotent — re-running for the same tag has no effect once DOIs are inserted.
+- Pre-releases (`-rc.N`, `-beta.N`, etc.) are skipped by both Zenodo (by default) and this workflow's `if:` guard. Only stable tags mint DOIs.
+- All 14 example folders are now shipped. Each follows the same input + output template. Contributors adding new skills must add a matching example per CONTRIBUTING.md.
+
+### Out of scope (deferred to v0.10.1+)
+
+- **Visibility assets** — screenshots in `docs/screenshots/`, demo GIF at `docs/demo.gif`, social-preview image. The README's "Visibility & assets" section references the placeholders.
+- **rc.1 soak period** — skipped per release decision; any post-final issues become v0.10.1 patches.
+- **The deferred grant-writer overhaul** — still parked for a later release (planned mirror of `manuscript-drafter` v0.8.0's F1-F6).
+
 ## [0.10.0-rc.1] — 2026-05-12
 
 **Pre-release.** First "double-digit" release — a community-maturity push, no behavior changes to existing skills.
@@ -212,7 +252,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0-rc.1...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0-rc.1...v0.10.0
 [0.10.0-rc.1]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...v0.10.0-rc.1
 [0.8.0]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Marazii/research-co-pilot/compare/v0.6.0...v0.7.0

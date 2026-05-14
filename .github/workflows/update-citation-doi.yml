@@ -1,0 +1,161 @@
+name: Update CITATION.cff with Zenodo DOI
+
+# Triggered after Release workflow completes for a stable (non-prerelease) tag.
+# Polls Zenodo for the freshly-minted DOI matching this repo, then updates
+# CITATION.cff's identifiers[] with both the concept DOI and the version DOI,
+# commits with [skip ci], and pushes back to main.
+#
+# If Zenodo doesn't mint within the timeout window, the workflow logs the
+# failure and exits. The manual fallback is documented in CONTRIBUTING.md.
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to update CITATION.cff for (e.g., v0.10.0)'
+        required: true
+
+jobs:
+  update-doi:
+    name: Fetch Zenodo DOI + update CITATION.cff
+    runs-on: ubuntu-latest
+    # Only run for successful Release workflow completion on a non-prerelease tag
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       startsWith(github.event.workflow_run.head_branch, 'v') &&
+       !contains(github.event.workflow_run.head_branch, '-'))
+    permissions:
+      contents: write
+    steps:
+      - name: Determine tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install yq + jq
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y jq
+          # yq for YAML editing; install latest binary
+          sudo wget -q https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Poll Zenodo for the DOI
+        id: zenodo
+        run: |
+          set -e
+          TAG="${{ steps.tag.outputs.tag }}"
+          REPO="${GITHUB_REPOSITORY}"
+
+          echo "Looking for Zenodo deposit for $REPO @ $TAG"
+
+          # Zenodo's GitHub integration creates deposits with the repo's GitHub URL
+          # in the 'related_identifiers' field. We poll the public records API.
+          QUERY="metadata.related_identifiers.identifier:\"https://github.com/${REPO}/tree/${TAG}\""
+
+          # Poll up to 20 times with 30s spacing = 10 min max wait
+          for attempt in $(seq 1 20); do
+            echo "Attempt $attempt of 20..."
+            RESPONSE=$(curl -sS "https://zenodo.org/api/records?q=${QUERY}&size=1" || echo '{}')
+            HITS=$(echo "$RESPONSE" | jq -r '.hits.total // 0')
+
+            if [ "$HITS" -gt 0 ]; then
+              VERSION_DOI=$(echo "$RESPONSE" | jq -r '.hits.hits[0].doi')
+              CONCEPT_DOI=$(echo "$RESPONSE" | jq -r '.hits.hits[0].conceptdoi // .hits.hits[0].metadata.relations.version[0].parent.pid_value // empty')
+
+              if [ -n "$VERSION_DOI" ] && [ -n "$CONCEPT_DOI" ]; then
+                echo "Found version DOI: $VERSION_DOI"
+                echo "Found concept DOI: $CONCEPT_DOI"
+                echo "version_doi=$VERSION_DOI" >> "$GITHUB_OUTPUT"
+                echo "concept_doi=$CONCEPT_DOI" >> "$GITHUB_OUTPUT"
+                echo "found=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+            fi
+
+            sleep 30
+          done
+
+          echo "::warning::Zenodo deposit not found within 10 minutes for $REPO @ $TAG"
+          echo "found=false" >> "$GITHUB_OUTPUT"
+
+      - name: Update CITATION.cff
+        if: steps.zenodo.outputs.found == 'true'
+        run: |
+          set -e
+          VERSION_DOI="${{ steps.zenodo.outputs.version_doi }}"
+          CONCEPT_DOI="${{ steps.zenodo.outputs.concept_doi }}"
+          TAG="${{ steps.tag.outputs.tag }}"
+          VERSION="${TAG#v}"
+
+          echo "Updating CITATION.cff with concept DOI $CONCEPT_DOI and version DOI $VERSION_DOI"
+
+          # Use yq to update the identifiers array. Schema:
+          #   identifiers:
+          #     - type: doi
+          #       value: <concept DOI>
+          #       description: Concept DOI — resolves to the latest version.
+          #     - type: doi
+          #       value: <version DOI>
+          #       description: Version DOI for <tag>.
+          yq -i '
+            .identifiers = [
+              {
+                "type": "doi",
+                "value": strenv(CONCEPT_DOI),
+                "description": "Concept DOI — resolves to the latest version."
+              },
+              {
+                "type": "doi",
+                "value": strenv(VERSION_DOI),
+                "description": "Version DOI for " + strenv(TAG) + "."
+              }
+            ]
+          ' CITATION.cff
+          env:
+            CONCEPT_DOI: ${{ steps.zenodo.outputs.concept_doi }}
+            VERSION_DOI: ${{ steps.zenodo.outputs.version_doi }}
+            TAG: ${{ steps.tag.outputs.tag }}
+
+          # Update preferred-citation's doi field too if present
+          yq -i '.preferred-citation.doi = strenv(VERSION_DOI)' CITATION.cff
+          env:
+            VERSION_DOI: ${{ steps.zenodo.outputs.version_doi }}
+
+      - name: Commit + push
+        if: steps.zenodo.outputs.found == 'true'
+        run: |
+          if git diff --quiet CITATION.cff; then
+            echo "CITATION.cff unchanged (DOIs may already be present)."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CITATION.cff
+          git commit -m "Update CITATION.cff with Zenodo DOIs for ${{ steps.tag.outputs.tag }} [skip ci]"
+          git push origin main
+
+      - name: Note manual fallback
+        if: steps.zenodo.outputs.found != 'true'
+        run: |
+          echo "::warning::Could not auto-update CITATION.cff. Manual fallback:"
+          echo "::warning::  1. Check Zenodo deposit at https://zenodo.org/account/settings/github/"
+          echo "::warning::  2. Copy the concept DOI and version DOI for tag ${{ steps.tag.outputs.tag }}"
+          echo "::warning::  3. Update CITATION.cff identifiers manually, commit, push"
+          echo "::warning::See CONTRIBUTING.md § Release process for details."

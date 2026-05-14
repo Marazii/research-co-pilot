@@ -20,8 +20,18 @@ authors:
 repository-code: "https://github.com/Marazii/research-co-pilot"
 url: "https://github.com/Marazii/research-co-pilot"
 license: MIT
-version: "0.10.0-rc.1"
-date-released: "2026-05-12"
+version: "0.10.0"
+date-released: "2026-05-14"
+identifiers:
+  # These placeholder DOIs will be auto-replaced by the update-citation-doi.yml
+  # workflow after Zenodo mints DOIs for the v0.10.0 release tag.
+  # If the auto-update fails, see CONTRIBUTING.md § Release process for the manual fallback.
+  - type: doi
+    value: "10.5281/zenodo.PLACEHOLDER-CONCEPT"
+    description: "Concept DOI — resolves to the latest version."
+  - type: doi
+    value: "10.5281/zenodo.PLACEHOLDER-VERSION"
+    description: "Version DOI for v0.10.0."
 keywords:
   - research
   - academic
@@ -51,7 +61,9 @@ preferred-citation:
   authors:
     - family-names: "Arazi"
       given-names: "Maya"
-  version: "0.10.0-rc.1"
-  date-released: "2026-05-12"
+  version: "0.10.0"
+  date-released: "2026-05-14"
   url: "https://github.com/Marazii/research-co-pilot"
   license: MIT
+  # Auto-updated by update-citation-doi.yml after Zenodo mints
+  doi: "10.5281/zenodo.PLACEHOLDER-VERSION"

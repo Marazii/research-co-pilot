@@ -1,11 +1,21 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.10.0--rc.1-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.10.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![CI](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml/badge.svg)](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
 [![Cite](https://img.shields.io/badge/cite-CITATION.cff-green.svg)](./CITATION.cff)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.PLACEHOLDER-CONCEPT.svg)](https://doi.org/10.5281/zenodo.PLACEHOLDER-CONCEPT)
+
+<!--
+  The DOI badge resolves to the Zenodo concept DOI for this repo, which
+  always points to the latest release. The placeholder is auto-replaced by
+  the update-citation-doi.yml workflow after v0.10.0 mints. If you see
+  PLACEHOLDER-CONCEPT here, the workflow hasn't run yet — see CONTRIBUTING.md
+  § Release process for the manual fallback.
+-->
+
 
 A Claude co-pilot for the entire research lifecycle — from picking a question through final peer review. Designed for academic researchers (graduate students, postdocs, faculty) and applied researchers (UX, policy, public health, data science) who want a rigorous collaborator that respects methodological standards instead of generating plausible-looking output.
 

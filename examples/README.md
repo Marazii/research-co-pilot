@@ -4,24 +4,22 @@ One synthetic, minimal example per skill. The goal is to show **what kind of out
 
 | Skill | Input | Output | Status |
 |---|---|---|---|
-| [literature-review](./literature-review/) | Topic + 2 starter citations | Thematic review with confidence-tagged claims | ✅ shipped in rc.1 |
-| [methodology-advisor](./methodology-advisor/) | Research question + constraints | Methodology doc including mandatory Phase 5 (AI / ML / Big Data extensions table) | ✅ shipped in rc.1 |
-| [ethics-committee](./ethics-committee/) | Protocol summary | IRB-style decision letter with required revisions | ✅ shipped in rc.1 |
-| [data-analysis](./data-analysis/) | Tiny CSV + analytic question | Script + report with effect sizes and CIs | ✅ shipped in rc.1 |
-| [qualitative-coding](./qualitative-coding/) | 2 short transcripts + research question | Codebook + coded excerpts + themes report | ✅ shipped in rc.1 |
-| [research-brainstorm](./research-brainstorm/) | Rough topic + constraints | 18 candidate questions, top 3 sketched | ✅ shipped in rc.1 |
-| [manuscript-drafter](./manuscript-drafter/) | Methodology + analysis + existing draft + bibliography | Discussion section with voice profile, ideation outline, `[LITERATURE NEEDED]` markers | ✅ shipped in rc.1 — showcases the v0.8.0 overhaul |
-| replication-designer | A target paper citation | Replication design with power calc, pre-reg plan, success criteria | 🚧 deferred to v0.10.0 final |
-| grant-writer | Project + funder (NSF) | Specific Aims + Significance snippets | 🚧 deferred to v0.10.0 final |
-| talk-builder | Paper + length + venue | Timed beat-by-beat outline + Marp slide deck stub | 🚧 deferred to v0.10.0 final |
-| citation-formatter | 3 messy citations | Cleaned APA 7 + Vancouver + BibTeX | 🚧 deferred to v0.10.0 final |
-| survey-design | Construct + population | Instrument with validated scales + pilot plan | 🚧 deferred to v0.10.0 final |
-| peer-review | Manuscript excerpt | Structured review + annotated-document description | 🚧 deferred to v0.10.0 final |
-| reviewer-response | R1 reviewer comments + manuscript draft | Cover letter + point-by-point response + revisions | 🚧 deferred to v0.10.0 final |
+| [literature-review](./literature-review/) | Topic + 2 starter citations | Thematic review with confidence-tagged claims | ✅ shipped |
+| [methodology-advisor](./methodology-advisor/) | Research question + constraints | Methodology doc including mandatory Phase 5 (AI / ML / Big Data extensions table) | ✅ shipped |
+| [ethics-committee](./ethics-committee/) | Protocol summary | IRB-style decision letter with required revisions | ✅ shipped |
+| [data-analysis](./data-analysis/) | Tiny CSV + analytic question | Script + report with effect sizes and CIs | ✅ shipped |
+| [qualitative-coding](./qualitative-coding/) | 2 short transcripts + research question | Codebook + coded excerpts + themes report | ✅ shipped |
+| [research-brainstorm](./research-brainstorm/) | Rough topic + constraints | 18 candidate questions, top 3 sketched | ✅ shipped |
+| [manuscript-drafter](./manuscript-drafter/) | Methodology + analysis + existing draft + bibliography | Discussion section with voice profile, ideation outline, `[LITERATURE NEEDED]` markers | ✅ shipped — showcases the v0.8.0 overhaul |
+| [replication-designer](./replication-designer/) | A target paper citation | Replication design with power calc, pre-reg plan, success criteria | ✅ shipped |
+| [grant-writer](./grant-writer/) | Project + funder (NSF) | Specific Aims + Significance snippets + fit-check note | ✅ shipped |
+| [talk-builder](./talk-builder/) | Paper + length + venue | Timed beat-by-beat outline + Marp slide deck stub (`talk.md`) | ✅ shipped |
+| [citation-formatter](./citation-formatter/) | 3 messy citations | Cleaned APA 7 + Vancouver + BibTeX | ✅ shipped |
+| [survey-design](./survey-design/) | Construct + population | Instrument with validated scales + pilot plan | ✅ shipped |
+| [peer-review](./peer-review/) | Manuscript excerpt | Structured review + annotated-document description | ✅ shipped |
+| [reviewer-response](./reviewer-response/) | R1 reviewer comments + manuscript draft | Cover letter + point-by-point response + revisions | ✅ shipped |
 
-## v0.10.0-rc.1 → v0.10.0 final
-
-The first seven examples are shipping with `v0.10.0-rc.1`. The remaining seven examples will be added during the rc.1 → final iteration window, using the same synthetic-minimal template. Each follows the same input + output pattern visible in the seven shipped examples.
+All 14 examples shipping with `v0.10.0` final.
 
 ## Conventions
 

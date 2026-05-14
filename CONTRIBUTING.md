@@ -70,6 +70,43 @@ Skills are the core unit of value here. The bar for a new skill is high because 
 
 Skills that pass: substantive workflow with discipline, hard rules that catch real failure modes, output schema a reviewer can audit, clear composition with at least one existing skill.
 
+## Release process (for maintainers)
+
+The release flow for a stable `vX.Y.Z` tag:
+
+1. **Bump version** in `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` (plugin-entry), `CITATION.cff` (`version` and `preferred-citation.version`), and the README version badge.
+2. **Add a CHANGELOG entry** under `## [X.Y.Z] — YYYY-MM-DD` with the changes; update the link refs at the bottom of `CHANGELOG.md`.
+3. **Rebuild `dist/*.zip`** locally for sanity (`./scripts/build-zips.sh`). CI will rebuild on tag push anyway.
+4. **Validate**: `claude plugin validate .` — zero errors and zero warnings.
+5. **Commit, push to `main`**.
+6. **Tag**: `git tag -a vX.Y.Z HEAD -m "vX.Y.Z — <short summary>"` then `git push --tags`.
+7. **CI takes over.** The `release.yml` workflow creates a GitHub Release with all 14 `dist/*.zip` files attached and the matching CHANGELOG section as release notes. Pre-release flag is set automatically when the tag contains a hyphen (e.g., `vX.Y.Z-rc.N`).
+8. **Wait for Zenodo to mint the DOI** (1-10 minutes for stable tags; pre-releases are skipped by Zenodo by default).
+9. **`update-citation-doi.yml` runs automatically** after `release.yml` completes for a non-prerelease tag. It polls Zenodo, updates `CITATION.cff`'s `identifiers:` array and `preferred-citation.doi` with both the concept DOI and the version-specific DOI, and commits with `[skip ci]`.
+10. **Refresh marketplace cache + update local install:**
+    ```bash
+    claude plugin marketplace update research-co-pilot-marketplace
+    claude plugin update research-co-pilot@research-co-pilot-marketplace
+    ```
+
+### Manual fallback if Zenodo DOI auto-update fails
+
+If the `update-citation-doi.yml` workflow logs `Zenodo deposit not found within 10 minutes`, fall back to manual:
+
+1. Go to <https://zenodo.org/account/settings/github/> and confirm the integration is toggled ON for `Marazii/research-co-pilot`. If not, toggle it and re-run the workflow via `gh workflow run update-citation-doi.yml -f tag=vX.Y.Z`.
+2. Find the deposit at <https://zenodo.org/account/settings/github/> (or search Zenodo for the repo + tag). Copy the concept DOI and the version DOI.
+3. Edit `CITATION.cff` manually: replace the two `value:` lines under `identifiers:` and the `preferred-citation.doi` line. Commit with `[skip ci]`, push.
+
+### Re-trigger DOI workflow manually
+
+The workflow accepts `workflow_dispatch` input for a tag:
+
+```bash
+gh workflow run update-citation-doi.yml -f tag=vX.Y.Z
+```
+
+Useful if Zenodo mints late, or if the first run failed for a transient reason.
+
 ## Reviewing a PR
 
 If you have commit access and are reviewing on the maintainer's behalf:
