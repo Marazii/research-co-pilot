@@ -6,6 +6,63 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.0-rc.1] — 2026-05-12
+
+**Pre-release.** First "double-digit" release — a community-maturity push, no behavior changes to existing skills.
+
+Version 0.9.0 is intentionally skipped at the plugin level; the planned `grant-writer` overhaul that was tentatively scoped as v0.9.0 is deferred to a future release (likely v0.11.0) so the v0.10.0 maturity work can be the focused next milestone. The CHANGELOG retains v0.9.0 as a deliberate gap to record this decision.
+
+### Added — new skill
+
+- **`reviewer-response`** — drafts a rigorous, polite, point-by-point response to reviewer comments (R1 / R2 / R3 letters) plus matching manuscript revisions. Categorizes each comment as concession + revision / partial concession / polite pushback / clarification needed / out of scope / minor; drafts response + revision per comment with verbatim reviewer quote; assembles a cover letter under one page that surfaces pushback up front. Self-audits that every claimed revision actually appears in the revised manuscript. Composes naturally with `peer-review` (consume comments) and `manuscript-drafter` (revise prose preserving voice). New `/respond` slash command. `/research` router updated with menu entry + routing keywords.
+
+### Added — community-facing infrastructure
+
+- **`CITATION.cff`** at repo root — Citation File Format v1.2.0. Renders as a "Cite this repository" widget on GitHub. Includes title, abstract, author, license, version, keywords. Zenodo-mintable on tag.
+- **`CONTRIBUTING.md`** — strict-tone contributor guide. Documents what gets accepted and declined. PR-level bar: validation passes, CHANGELOG entry, version bump if applicable, dist rebuild, per-skill README + example update, no real-data leaks, no telemetry. Path for new skills requires a `New skill proposal` issue first.
+- **`CODE_OF_CONDUCT.md`** — adopts Contributor Covenant 2.1 by reference (not inlined verbatim).
+- **`.github/ISSUE_TEMPLATE/bug.md`**, **`feature.md`**, **`new-skill-proposal.md`** — structured intake for community contributions. New-skill template requires research-workflow articulation, closest-existing-skill comparison, hard rules, phase outline, output format, composition with existing skills, honest caveats, trigger phrases, maintenance commitment.
+- **`.github/PULL_REQUEST_TEMPLATE.md`** — checklist enforcing the PR-level bar.
+- **`docs/faq.md`** — common questions: citations, HIPAA / GDPR / IRB-protected data, language coverage, version sync, contribution path, comparison to Elicit / Consensus / Scite / ResearchRabbit, local vs. API execution, telemetry policy, license, uninstall path.
+
+### Added — per-skill READMEs
+
+- **`README.md` in every skill folder** (14 total — 13 existing + reviewer-response). Each follows a common template: one-line summary / trigger phrases / inputs / output / introduced-in version / spec link / "When to use this" framing / a synthetic example linked to `examples/<skill>/` / composition with other skills / honest caveats. The main README's skills table now links each skill name to its per-skill README.
+
+### Added — examples
+
+- **`examples/` folder with synthetic minimal examples** (7 shipped in rc.1; 7 deferred to v0.10.0 final). Each example is an input + output pair showing the skill's actual deliverable format. Shipped in rc.1: literature-review, methodology-advisor, ethics-committee, data-analysis, qualitative-coding, research-brainstorm, manuscript-drafter. Deferred to final: replication-designer, grant-writer, talk-builder, citation-formatter, survey-design, peer-review, reviewer-response.
+- **`examples/README.md`** — directory index with status per example.
+
+### Added — CI / automation
+
+- **`.github/workflows/validate.yml`** — runs `claude plugin validate .` on every push to `main` and on PRs. Also checks every `SKILL.md` description for the ≤ 1024-char limit. Catches schema regressions and description-overflow before merge.
+- **`.github/workflows/build-dist.yml`** — auto-rebuilds `dist/*.zip` when `skills/**` changes. Currently uploads as a workflow artifact (auto-commit-back is commented out in favor of GitHub Release distribution).
+- **`.github/workflows/release.yml`** — on tag push matching `v*.*.*` or `v*.*.*-*`, builds all dist zips, extracts the matching CHANGELOG section as release notes, creates a GitHub Release with the zips attached, marks pre-release for tags containing a hyphen.
+
+### Added — visibility (planned for rc.1 → final cycle)
+
+- `docs/screenshots/` directory ready for high-DPI screenshots of typical skill outputs (annotated PDFs, methodology with the AI/ML extensions table, Word docs with anchored comments).
+- `docs/demo.gif` / `docs/social-preview.png` placeholders.
+- Social-preview image to be uploaded via GitHub Settings → Social preview.
+
+### Changed
+
+- **README badges** — added CI status (from validate.yml) and "Cite this repository" link. Version bumped to 0.10.0-rc.1. Existing badges (license, version, Claude Code, claude.ai) preserved.
+- **README install paths for claude.ai users switched from `raw/main/dist/X.zip` to `releases/latest/download/X.zip`** — stable URLs that don't churn with every commit on main. This is the v0.10.0 distribution transition.
+- **README skills table** — every skill name now links to its per-skill `README.md`.
+- **`/research` router** — added `/respond` to the menu and `reviewer-response` to the routing keywords.
+
+### Notes for upgraders
+
+- This is a pre-release (`-rc.1` suffix). It is functionally complete for the maturity push but the Zenodo DOI mints only on `v0.10.0` final, and the remaining 7 example folders + visibility assets (screenshots, demo GIF, social-preview) land during the rc.1 → final cycle.
+- For claude.ai users: the dist zips are now served from GitHub Releases. Update any saved download URLs accordingly. Old `raw/main/dist/X.zip` URLs continue to work for any past versions (no force-push), but new versions are released as Release assets only.
+- No existing skill behavior changed in v0.10.0-rc.1. v0.8.0's manuscript-drafter overhaul is intact; v0.7.0's peer-review multi-format anchoring is intact.
+
+## [0.9.0] — not released
+
+The `grant-writer` overhaul originally scoped as v0.9.0 is deferred. The intent is to apply the same rigor pass (F1–F6: voice preservation, length budgets, register, literature-grounding, two-pass ideation/prose, language-aware) that `manuscript-drafter` received in v0.8.0. v0.9.0 is reserved as a placeholder; the actual grant-writer overhaul will likely ship as v0.11.0 after v0.10.0 final lands and the F1–F6 pattern has been tested in real use on manuscript-drafter.
+
 ## [0.8.0] — 2026-05-12
 
 ### Changed (substantial overhaul of `manuscript-drafter`)
@@ -155,7 +212,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0-rc.1...HEAD
+[0.10.0-rc.1]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...v0.10.0-rc.1
 [0.8.0]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/Marazii/research-co-pilot/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Marazii/research-co-pilot/compare/v0.5.0...v0.6.0

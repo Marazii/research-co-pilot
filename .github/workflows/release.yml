@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-*'
+
+jobs:
+  release:
+    name: Build dist + create GitHub Release with zips attached
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repo at tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # need full history for changelog extraction
+
+      - name: Make build script executable
+        run: chmod +x scripts/build-zips.sh
+
+      - name: Build all zips
+        run: ./scripts/build-zips.sh
+
+      - name: Extract release notes from CHANGELOG.md
+        id: changelog
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          # Strip leading 'v' to match CHANGELOG section headers like ## [0.10.0]
+          version="${tag#v}"
+          # Extract everything between the matching version header and the next ## header.
+          notes=$(awk -v v="$version" '
+            BEGIN { in_section=0 }
+            /^## \[/ {
+              if (in_section) exit
+              if ($0 ~ "\\[" v "\\]") in_section=1
+            }
+            in_section { print }
+          ' CHANGELOG.md)
+          if [ -z "$notes" ]; then
+            notes="See [CHANGELOG.md](./CHANGELOG.md) for details on this release."
+          fi
+          # Write to a file to avoid escaping issues
+          echo "$notes" > release_notes.md
+          echo "notes_file=release_notes.md" >> "$GITHUB_OUTPUT"
+
+      - name: Determine prerelease flag
+        id: prerelease
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          if [[ "$tag" == *-* ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release with zips attached
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body_path: ${{ steps.changelog.outputs.notes_file }}
+          prerelease: ${{ steps.prerelease.outputs.prerelease == 'true' }}
+          files: |
+            dist/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

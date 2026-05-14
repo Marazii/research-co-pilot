@@ -1,0 +1,57 @@
+cff-version: 1.2.0
+message: "If you use this plugin in your research, please cite it as below."
+title: "research-co-pilot: a Claude co-pilot for the entire research lifecycle"
+abstract: >
+  research-co-pilot is a Claude Code and claude.ai plugin for academic and applied research.
+  It bundles 14 skills covering the research lifecycle — literature review, methodology design
+  (with mandatory creative AI / ML / Big Data extensions), ethics committee stress-testing,
+  data analysis, qualitative coding, brainstorming, manuscript drafting (with voice preservation
+  and academic-register enforcement), replication design, grant writing, talk building,
+  reviewer-response drafting, citation formatting, survey design, and peer review (with anchored
+  annotations across DOCX / PDF / PPTX / LaTeX) — alongside subagents for parallel source-reading,
+  heavy data analysis, transcript coding, manuscript drafting, and independent stats validation.
+  Designed to refuse common AI failure modes (fabricated citations, p-hacking, themes-without-an-audit-trail,
+  averaging away disagreement in the literature) and to support multiple languages including Hebrew.
+type: software
+authors:
+  - family-names: "Arazi"
+    given-names: "Maya"
+    affiliation: "Independent researcher"
+repository-code: "https://github.com/Marazii/research-co-pilot"
+url: "https://github.com/Marazii/research-co-pilot"
+license: MIT
+version: "0.10.0-rc.1"
+date-released: "2026-05-12"
+keywords:
+  - research
+  - academic
+  - literature-review
+  - methodology
+  - ethics-review
+  - data-analysis
+  - qualitative-research
+  - manuscript-drafting
+  - peer-review
+  - grant-writing
+  - claude
+  - claude-code
+  - claude-skills
+  - claude-plugin
+  - agent-skills
+  - llm
+  - prompt-engineering
+  - open-science
+  - reproducible-research
+  - research-methods
+  - scientific-writing
+  - ai-research
+preferred-citation:
+  type: software
+  title: "research-co-pilot: a Claude co-pilot for the entire research lifecycle"
+  authors:
+    - family-names: "Arazi"
+      given-names: "Maya"
+  version: "0.10.0-rc.1"
+  date-released: "2026-05-12"
+  url: "https://github.com/Marazii/research-co-pilot"
+  license: MIT

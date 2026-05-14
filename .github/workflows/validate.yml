@@ -1,0 +1,56 @@
+name: Validate plugin manifest
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.claude-plugin/**'
+      - 'skills/**'
+      - 'agents/**'
+      - 'commands/**'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - '.claude-plugin/**'
+      - 'skills/**'
+      - 'agents/**'
+      - 'commands/**'
+
+jobs:
+  validate:
+    name: claude plugin validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node (for Claude Code CLI install)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate plugin and marketplace manifests
+        run: claude plugin validate .
+        # NOTE: validate is a local schema check; no Anthropic API key required.
+        # If a future Claude Code version makes validate require auth, add ANTHROPIC_API_KEY
+        # as a repo secret and pass it via env: { ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} }.
+
+      - name: Check SKILL.md description char counts
+        run: |
+          set -e
+          fail=0
+          for f in skills/*/SKILL.md; do
+            desc=$(awk '/^---/{c++; next} c==1 && /^description:/{flag=1; sub(/^description: ?/, ""); val=$0; next} c==1 && /^[a-z]/{flag=0} c==1 && flag {val=val "\n" $0} END{print val}' "$f")
+            len=$(echo -n "$desc" | wc -c | tr -d ' ')
+            if [ "$len" -gt 1024 ]; then
+              echo "::error file=$f::description is $len chars (limit 1024)"
+              fail=1
+            else
+              echo "OK: $f description is $len chars"
+            fi
+          done
+          exit $fail

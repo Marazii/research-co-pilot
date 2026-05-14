@@ -1,0 +1,7 @@
+# Introduction (existing draft — for voice extraction)
+
+The shift to remote and hybrid work since 2020 has been described, variously, as a temporary perturbation, a permanent reorganization, and a stress test of organizational forms (Yang et al., 2021; Choudhury et al., 2024). Less clear, however, is what this shift has done to mentorship — that quietly load-bearing function by which junior workers learn what their roles actually demand of them. Pre-pandemic, mentorship was treated as adjacent to but distinct from sponsorship: mentors give advice, sponsors expend social capital (Hewlett, 2013). It remains an open question whether this distinction matters more, less, or differently under remote conditions.
+
+This paper offers a mixed-methods investigation of remote-work mentorship in the first 12 months of professional tenure. We pursue two questions in tandem: first, whether self-reported mentorship quality predicts 12-month retention in a survey panel of knowledge workers; second, how those workers describe the mentorship they actually received in their first year. The quantitative analysis establishes a measurable association; the qualitative analysis identifies its substrate.
+
+The structure that follows is conventional: methods, results, and discussion. The discussion will return to the mentorship-sponsorship distinction and consider whether the remote-work era has shifted the relative weight of these two functions.

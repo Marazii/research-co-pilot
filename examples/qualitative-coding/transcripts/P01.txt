@@ -1,0 +1,11 @@
+INTERVIEWER: Tell me about your first year at the company. How did mentorship work for you?
+
+P01: Honestly, it was strange. I was hired fully remote in 2024, never met my team in person for the first eight months. My manager was great about scheduling weekly one-on-ones, but those felt like check-ins, not mentorship. The actual mentorship I got came from this informal Slack channel where senior engineers would answer questions. So my mentors weren't assigned — they were the people who happened to respond to my questions in #ask-eng.
+
+INTERVIEWER: When you say "mentorship," what do you mean?
+
+P01: Career advice, mostly. Like, "should I take this stretch assignment?" or "how do I deal with this difficult stakeholder?" The questions a junior engineer needs answered. My manager could've given me that advice if I'd asked, but I never felt like I should waste their time on it. The senior folks in #ask-eng were more accessible because the questions were already public — it didn't feel like I was bothering them.
+
+INTERVIEWER: Did the remote setup help or hurt that?
+
+P01: Both. It hurt because there was no random hallway thing where someone notices you're confused and pulls you aside. That doesn't exist remotely. But it helped because the senior people I learned from were spread across three time zones. In a physical office, I would've only had access to the people on my floor. In Slack, I had access to everyone who wanted to be accessible.

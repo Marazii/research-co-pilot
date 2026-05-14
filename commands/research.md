@@ -26,6 +26,7 @@ What part of your research can I help with?
 🔁  /replicate        — Design a replication of an existing study
 💰  /grant            — Draft grant-proposal sections (NSF, NIH, ERC, Wellcome, etc.)
 🎤  /talk             — Turn a paper into a conference talk (outline + slides + speaker notes)
+📩  /respond          — Draft point-by-point response to reviewer comments (R1 / R2 / R3) + revisions
 📝  /cite             — Format citations and bibliographies (APA, MLA, etc.)
 📋  /survey           — Design rigorous surveys and questionnaires
 🧪  /peer-review      — Rigorous academic peer review of a paper or thesis
@@ -46,6 +47,7 @@ If the user's input contains:
 - "draft my paper", "write the intro", "write the methods section", "draft the discussion", "write the abstract", "manuscript draft" → invoke `manuscript-drafter` skill.
 - "replicate", "replication", "registered replication", "many-labs", "is this finding robust" → invoke `replication-designer` skill.
 - "grant", "specific aims", "NSF", "NIH", "ERC", "Wellcome", "Horizon Europe", "fellowship application", "broader impacts", "lay summary", "biosketch" → invoke `grant-writer` skill.
+- "respond to reviewers", "R1 response", "R2 response", "rebuttal", "address reviewer comments", "reviewer-response letter", "point-by-point response", "revision and resubmission", "response to reviewer 2", "cover letter to editor" → invoke `reviewer-response` skill.
 - "turn paper into talk", "presentation outline", "slides for my talk", "conference talk", "lecture outline", "academic presentation", "speaker notes", "thesis defense talk", "job talk", "keynote", "invited talk", "lightning talk", "elevator pitch of my paper" → invoke `talk-builder` skill.
 - "cite", "citation", "bibliography", "APA", "MLA", "Chicago", "BibTeX" → invoke `citation-formatter` skill.
 - "survey", "questionnaire", "Likert", "question wording" → invoke `survey-design` skill.

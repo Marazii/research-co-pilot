@@ -1,0 +1,61 @@
+name: Build dist zips
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'skills/**'
+      - 'scripts/build-zips.sh'
+  workflow_dispatch:
+
+jobs:
+  build-dist:
+    name: Rebuild claude.ai upload bundles
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Required so the auto-commit step can push back. For protected main branches,
+          # this needs branch protection rules to allow GitHub Actions pushes (or use a PAT).
+
+      - name: Make build script executable
+        run: chmod +x scripts/build-zips.sh
+
+      - name: Build all zips
+        run: ./scripts/build-zips.sh
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if git diff --quiet dist/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload built zips as workflow artifact
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-zips
+          path: dist/*.zip
+          retention-days: 7
+
+      # NOTE: in v0.10.0 we transition away from committing dist/ to main.
+      # The release.yml workflow attaches zips to GitHub Releases instead.
+      # This workflow keeps zips current as a workflow artifact for spot-checks during development.
+      # If you want to re-enable auto-commit for local-marketplace users, uncomment the block below.
+      #
+      # - name: Commit rebuilt zips
+      #   if: steps.changes.outputs.changed == 'true'
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git add dist/*.zip
+      #     git commit -m "Rebuild dist/*.zip [skip ci]"
+      #     git push

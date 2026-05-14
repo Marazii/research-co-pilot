@@ -1,0 +1,11 @@
+INTERVIEWER: How would you describe mentorship in your first year?
+
+P02: I would describe it as mostly absent. I joined fully remote in 2023, and I had a formal mentor assigned by HR, but we met twice in the whole first year. The meetings were awkward — neither of us really knew what to talk about. Most of what I learned, I learned from watching senior engineers' pull requests. That's where the real mentorship happened.
+
+INTERVIEWER: Can you say more about that?
+
+P02: Sure. So when you're new, you don't know what good code looks like for the team. You can read style guides, but those don't tell you the unwritten rules. The way I figured them out was by watching senior people's PRs — what they pushed back on in reviews, what they accepted, what patterns kept showing up. That's how I learned the team's actual standards, not the documented ones.
+
+INTERVIEWER: Did you feel like you had someone advocating for you?
+
+P02: No, not really. I think that's the thing that's hardest about remote. You can technically have mentorship — you can have someone to ask questions — but you don't have someone in the room when promotion decisions get made. I didn't have that. I got promoted on time, but I didn't have the sense that anyone was pushing for me specifically. My manager was nice but they weren't an advocate.
