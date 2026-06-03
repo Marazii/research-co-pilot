@@ -40,6 +40,7 @@ Some stages spawn a subagent to do heavy work without flooding the main conversa
 | qualitative-coding | `transcript-coder` | bulk cleaning + coding across many transcripts |
 | manuscript-drafter | `manuscript-drafter` (subagent) | long-form drafting in isolation |
 | data-analysis / peer-review | `stats-validator` | independent second look on an analysis |
+| vault | `vault-organizer` | reading through a pile of files and filing them into the vault's categories |
 
 On claude.ai there are no subagents; the parent skill does the work inline in the analysis sandbox.
 

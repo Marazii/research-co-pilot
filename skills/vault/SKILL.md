@@ -11,7 +11,7 @@ description: |
   Trigger when: user mentions "vault", "project folder", "organize my research", "research vault", "project
   knowledge", "audit my project", "check for inconsistencies", "is my sample size consistent", "project
   facts", "what's in the vault", "tidy my project", or runs /vault.
-argument-hint: "[show | init [<project-slug>] | organize | audit | add <type> | resolve <question>]"
+argument-hint: "[show | init [<project-slug>] | organize [<source-path>] | audit | add <type> | resolve <question>]"
 allowed-tools:
   - Read
   - Write
@@ -89,16 +89,25 @@ Loose/unfiled: 00-inbox/notes.pdf  →  run /vault organize to file it
 
 ---
 
-## Mode: `organize`
+## Mode: `organize` (optionally `organize <source-path>`)
 
-Tidy the project home. **Move files; never edit their content.**
+Tidy the project home — and, given a `<source-path>`, **import an external pile** (a messy folder, a Downloads dump, an inherited project) into the vault. **Move/copy files; never edit their content.**
 
-1. Scan the project root and `00-inbox/` for loose artifacts. File each into its correct stage folder by recognizing its type (a `methodology_*.md` → `03-methodology/`, an `analysis_*.md` → `07-analysis/`, a `*_REVIEWED.*` → `09-review/`, etc. — use the stage→folder map). Ask before moving anything ambiguous.
-2. For any artifact that supersedes an existing one (same skill + topic, newer), move the **older** version to `archive/` with a dated suffix.
-3. Leave `06-data/` alone (the user manages data) except to confirm no real-name key sits there (if it might, flag 🔴, don't move).
-4. Update `manifest.json` `artifacts` (paths, stages) to match the tidied layout.
-5. Regenerate the root `README.md` contents map.
-6. Report what moved and what (if anything) needs the user's decision.
+**Small / in-vault tidy (no path, or a handful of loose files):**
+
+1. Scan the project root and `00-inbox/` for loose artifacts. File each into its correct stage folder by type (`methodology_*.md` → `03-methodology/`, `analysis_*.md` → `07-analysis/`, `*_REVIEWED.*` → `09-review/`, … — use the stage→folder map). Ask before moving anything ambiguous.
+2. Superseded artifact (same skill + topic, newer) → move the **older** version to `archive/` with a dated suffix.
+3. Leave `06-data/` alone except to confirm no real-name key sits there (if it might, flag 🔴, don't move).
+4. Update `manifest.json` `artifacts`; regenerate the root `README.md`.
+
+**Large or external pile (`organize <source-path>`, or many files) — delegate:**
+
+- **Claude Code:** spawn the **`vault-organizer` subagent**, pointing it at the source path + this project vault. It reads through everything in isolation, classifies each file into the vault's categories, flags PII, and returns a **filing plan** (file → target folder → confidence → rationale → flag) plus suggested knowledge deposits. **Present the plan to the user for approval** (human gate — nothing moves yet). On approval, re-invoke the subagent with `apply` (non-destructive copy by default; `apply --move` to move). Then fold any approved knowledge deposits (citations → `bibliography.md`, confirmed facts → the manifest) and regenerate the README.
+- **claude.ai:** no subagents — do the classification inline, but still produce the plan first and get approval before filing; keep it to a manageable number of files per pass.
+
+**PII hard rule (both paths):** never file a real-name key, signed consent form, contact list, or raw identifiable data into the vault. Route to `00-inbox/` (or leave in place), flagged 🔴, with a note to keep it off-system. The vault holds pseudonyms / anonymized data only.
+
+After any organize: report what moved, what's flagged, and what needs the user's decision.
 
 ---
 

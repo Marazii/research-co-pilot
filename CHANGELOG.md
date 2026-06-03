@@ -6,6 +6,24 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.11.3] — 2026-06-03
+
+**`vault-organizer` subagent.** Point it at a pile of files — a messy folder, a Downloads dump, an inherited project — and it reads through everything in isolation and files it into the vault's categories.
+
+### Added
+
+- **New subagent `agents/vault-organizer.md`** (Claude Code). Reads a folder/pile, classifies each file into the vault template (the numbered stage folders + `knowledge/` + `06-data/`), and returns a **filing plan** — `file → target folder → confidence → rationale → flag` — plus suggested knowledge deposits (citations it can extract, candidate facts, glossary terms) and a duplicates/versions list. Defaults to a **dry-run plan** (moves nothing until approved) and files **non-destructively** (copy by default; `apply --move` to move; never deletes).
+- **PII gate.** The organizer never files a real-name → pseudonym key, a signed consent form, a contact list, or raw identifiable data into the vault — those are flagged 🔴 and routed to `00-inbox/` (or left in place) with a note to keep them off-system. It does not attempt to de-identify (that's the researcher's call + qualitative-coding's job).
+- **`/vault organize <source-path>`** — the `vault` skill now imports an external pile: for a large/external set it spawns `vault-organizer`, presents the filing plan for approval (human gate — nothing moves yet), and on approval applies it and folds approved knowledge deposits into the vault. claude.ai does the same inline, in manageable batches.
+
+### Changed
+
+- README + `docs/skill-network.md` subagent tables and the file tree list the new subagent (now **6 subagents**). The `vault` skill's `organize` mode documents the delegate-to-subagent path and the PII rule.
+
+### Design (held)
+
+- Human-gate: the organizer proposes; the user approves before anything moves. Non-destructive by default. Low-confidence files → `00-inbox/`, never guessed into a stage folder. The vault never holds PII; the organizer enforces it at the door.
+
 ## [0.11.2] — 2026-06-03
 
 **The vault becomes the project home.** v0.11.1 made the vault a knowledge layer inside the hidden `.research/` workspace. v0.11.2 turns it into a **clean, visible, templated project folder** — `research/<project>/` — where every skill files its output into a numbered lifecycle-stage subfolder. The project now reads top-to-bottom like its own story instead of a flat dump; no more hunting for where a file went. Opt-in and non-breaking: run any skill standalone and nothing changes.
@@ -356,7 +374,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.2...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.3...HEAD
+[0.11.3]: https://github.com/Marazii/research-co-pilot/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/Marazii/research-co-pilot/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/Marazii/research-co-pilot/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0...v0.11.0

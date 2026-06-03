@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.11.2-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.11.3-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![CI](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml/badge.svg)](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
@@ -300,7 +300,8 @@ research-co-pilot/
 │   ├── data-cruncher.md      # heavy compute in isolation
 │   ├── transcript-coder.md   # bulk qualitative processing
 │   ├── manuscript-drafter.md # long-form drafting in isolation
-│   └── stats-validator.md    # independent second-look on a colleague's analysis
+│   ├── stats-validator.md    # independent second-look on a colleague's analysis
+│   └── vault-organizer.md    # read a pile of files + file them into the vault's categories
 ├── commands/                 # Slash commands (Claude Code only)
 │   ├── research.md           # /research — entry-point router
 │   └── (one per skill: /lit-review, /methodology, /ethics, /analyze,
@@ -348,6 +349,7 @@ research-co-pilot/
 | `transcript-coder` | Bulk cleaning, anonymization, and code-application across many transcripts. Returns coded JSON + a summary instead of full transcript text. |
 | `manuscript-drafter` | Long-form drafting (whole sections or whole papers) in isolation so the parent doesn't get flooded with thousands of words. Returns a structured digest plus the draft as files. |
 | `stats-validator` | Independent second-look on a colleague's analysis. Reads their script + data + report in fresh context (no narrative contamination), re-runs, sensitivity-checks, and returns a tight memo with confidence judgment. |
+| `vault-organizer` | Reading through a pile of files (a messy folder, a Downloads dump, an inherited project) and filing them into the vault's categories. Classifies each file → stage folder with confidence + rationale, flags PII (never files real-name keys / signed consent / raw identifiers into the vault), and returns a filing plan; on approval, files non-destructively (copy by default). Spawned by `/vault organize <path>`. |
 
 ### Slash commands (Claude Code only)
 
