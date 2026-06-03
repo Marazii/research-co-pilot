@@ -47,7 +47,7 @@ See [`examples/qualitative-coding/`](../../examples/qualitative-coding/) for a w
 
 ## Composes well with
 
-*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `research/<project>/` vault live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
 
 - **`literature-review`** — Lit-review identifies the theoretical framework that informs deductive coding (e.g., a Job Demands-Resources lens).
 - **`methodology-advisor`** — Methodology specifies the qualitative tradition; this skill executes within it.

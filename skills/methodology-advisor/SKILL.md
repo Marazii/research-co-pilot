@@ -291,14 +291,14 @@ If the user has already committed to a design that doesn't fit their question, s
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Design — after the literature review, before ethics review and data collection.
 
 **Upstream (what this skill reads):**
 - `literature-review` → `lit_review_<topic>.md` — the gap this design closes.
 - `research-brainstorm` → `brainstorm_<topic>.md` — the question, if no lit review was run.
-- *At intake, check `.research/manifest.json` for these before asking the user to restate the question or gap.*
+- *At intake, check `research/<project>/manifest.json` for these before asking the user to restate the question or gap.*
 
 **Downstream (what this skill feeds):**
 - `ethics-committee` — audit the protocol before any data is collected (strongly recommended next step).
@@ -316,4 +316,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* deposit the project's anchor **facts** — `sample_size` (recruited, with justification), `preregistration` link, `time_range`, target paradigm — each with provenance; append design decisions (e.g., "DiD over cross-sectional, because…") to `decisions.md`; add operationalizations to `glossary.md`.
 - *Flag-on-write:* if you'd set a fact that already exists with a different value, surface it rather than overwrite.
 
-**Output to the workspace:** write `methodology_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `design`.
+**Output to the vault:** write `methodology_<study>.md` into `research/<project>/03-methodology/`, register it in the manifest, advance `stage` to `design`.

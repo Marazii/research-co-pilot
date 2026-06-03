@@ -226,7 +226,7 @@ When the dataset is large, computation is slow, or many model variants are neede
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Analysis — after data collection, before drafting.
 
@@ -234,7 +234,7 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - `methodology-advisor` → `methodology_<study>.md` — the pre-specified analysis plan; the creative AI/ML/Big Data extensions section often names the models to run.
 - `survey-design` → the fielded instrument (once data is in) — variable definitions and scoring keys.
 - The **dataset** itself.
-- *At intake, check `.research/manifest.json` for the methodology before asking for paths; reconcile against the filesystem.*
+- *At intake, check `research/<project>/manifest.json` for the methodology before asking for paths; reconcile against the filesystem.*
 
 **Downstream (what this skill feeds):**
 - `manuscript-drafter` — the Results section is sourced from `analysis_<topic>.md`.
@@ -249,4 +249,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* record the **analyzed N as a distinct fact** (`sample_size_analyzed`, with a note on exclusions) — do not overwrite the recruited N; append every cleaning / exclusion / model-choice decision to `decisions.md` with rationale (the reproducibility spine the methods + reviewer-response draw from).
 - *Flag-on-write:* if your analyzed N differs from the vault's `sample_size` and there is no exclusion note explaining it, **stop and ask** whether it's a post-exclusion N (distinct fact) or a discrepancy — never silently emit a contradicting number.
 
-**Output to the workspace:** write `analysis_<topic>.md` (+ the reproducible script) under `.research/`, register it in the manifest, advance `stage` to `analysis`.
+**Output to the vault:** write `analysis_<topic>.md` (+ the reproducible script) into `research/<project>/07-analysis/`, register it in the manifest, advance `stage` to `analysis`.

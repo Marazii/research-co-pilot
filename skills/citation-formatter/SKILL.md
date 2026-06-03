@@ -244,7 +244,7 @@ For one-off conversions, do the formatting yourself.
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Citations — a support skill; runs whenever references exist (drafting, pre-submission, grant prep).
 
@@ -252,7 +252,7 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - `manuscript-drafter` → `manuscript_<section>_<topic>.md` — the draft whose bibliography needs formatting (after `[CITATION NEEDED]` markers are resolved).
 - `literature-review` → `lit_review_<topic>.md` — its reference list as a starter bibliography.
 - `grant-writer` → grant sections needing funder-specific citation style.
-- *At intake, check `.research/manifest.json` for a draft or reference list before asking for paths.*
+- *At intake, check `research/<project>/manifest.json` for a draft or reference list before asking for paths.*
 
 **Downstream (what this skill feeds):**
 - `manuscript-drafter` — hand the cleaned references back into the draft.
@@ -266,4 +266,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* the canonical `bibliography.md` — **this is your input**, not a parallel list. Render the requested style *from it*; don't build a separate reference list that can drift.
 - *Write at output:* mark entries `Verified` once you've confirmed DOI/metadata; fold any new sources back into `bibliography.md` with cite-keys; resolve the matching `[CITATION NEEDED]` items in `open-questions.md`.
 
-**Output to the workspace:** write `references.md` (or edit the manuscript in place) under `.research/`, register it in the manifest.
+**Output to the vault:** write `references.md` (or edit the manuscript in place) into `research/<project>/08-drafts/`, register it in the manifest.

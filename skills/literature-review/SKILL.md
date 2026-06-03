@@ -166,14 +166,14 @@ If the user provided files (PDFs, BibTeX, Zotero exports, etc.):
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Review — after a question is chosen, before study design.
 
 **Upstream (what this skill reads):**
 - `research-brainstorm` → `brainstorm_<topic>.md` — the chosen, sharpened research question.
 - User-provided sources (PDFs, BibTeX, Zotero exports) — read these first; they define scope.
-- *At intake, check `.research/manifest.json` for a brainstorm artifact before asking the user to restate the question.*
+- *At intake, check `research/<project>/manifest.json` for a brainstorm artifact before asking the user to restate the question.*
 
 **Downstream (what this skill feeds):**
 - `methodology-advisor` — the "Gaps and open questions" section becomes the design's target.
@@ -189,4 +189,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* existing `bibliography.md` (don't duplicate sources already verified) and `glossary.md`.
 - *Write at output:* **seed the canonical `bibliography.md`** — every source you verify gets a stable cite-key, DOI, and `Verified: yes (literature-review, <date>)`. This is the single source of truth all downstream skills cite from. Register any `[CITATION NEEDED]` / `[LITERATURE NEEDED]` in `open-questions.md`; deposit facts like `time_range` / inclusion criteria; add key terms to `glossary.md`.
 
-**Output to the workspace:** write `lit_review_<topic>.md` under `.research/`, register it in the manifest, advance `stage` to `review`.
+**Output to the vault:** write `lit_review_<topic>.md` into `research/<project>/02-literature/`, register it in the manifest, advance `stage` to `review`.

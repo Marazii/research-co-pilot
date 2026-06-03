@@ -45,24 +45,25 @@ On claude.ai there are no subagents; the parent skill does the work inline in th
 
 ---
 
-## The shared workspace (`.research/`)
+## The shared workspace — the project vault
 
-When skills run as a connected project, they coordinate through a workspace directory rather than the user re-supplying paths at every step.
+When skills run as a connected project, they coordinate through **the vault**: a clean, visible, templated project folder (`research/<project>/`) where every output is filed into a numbered lifecycle-stage subfolder, rather than the user re-supplying paths at every step.
 
 ```
-.research/
-  manifest.json              # index of artifacts + project state
-  lit_review_<topic>.md      # produced by literature-review
-  methodology_<study>.md     # produced by methodology-advisor
-  analysis_<topic>.md        # produced by data-analysis
-  ...                        # each skill's existing output filename, under .research/
+research/<project-slug>/
+  README.md                  # auto-generated project overview
+  manifest.json              # index of artifacts + facts + vault registry
+  knowledge/                 # facts, bibliography, decisions, open-questions, glossary, voice-profile, entities
+  01-ideation/  02-literature/  03-methodology/  04-ethics/  05-instruments/
+  06-data/      07-analysis/    08-drafts/        09-review/  10-dissemination/
+  audits/   archive/   00-inbox/
 ```
 
-The filenames are exactly the ones each skill already produces (see each skill's Output phase). The only new convention is: **write them under `.research/`, and register them in the manifest.**
+Each skill files its deliverable into the right stage folder (methodology → `03-methodology/`, analysis → `07-analysis/`, drafts → `08-drafts/`, …) and registers it in the manifest. The full template, the stage→folder map, the root `README.md`, and the `/vault organize` + `/vault audit` behaviors are in [`docs/research-vault.md`](./research-vault.md).
 
 ### Manifest schema
 
-`.research/manifest.json` is a plain JSON file. Skills read and write it with ordinary file tools — no script required.
+`research/<project>/manifest.json` is a plain JSON file. Skills read and write it with ordinary file tools — no script required.
 
 ```json
 {
@@ -71,9 +72,9 @@ The filenames are exactly the ones each skill already produces (see each skill's
   "stage": "drafting",
   "created": "2026-05-15",
   "artifacts": [
-    {"skill": "literature-review",   "file": ".research/lit_review_remote_work.md", "status": "final"},
-    {"skill": "methodology-advisor", "file": ".research/methodology_remote_work.md", "status": "final"},
-    {"skill": "data-analysis",       "file": ".research/analysis_remote_work.md",    "status": "draft"}
+    {"skill": "literature-review",   "file": "02-literature/lit_review_remote_work.md",  "stage": "review",   "status": "final"},
+    {"skill": "methodology-advisor", "file": "03-methodology/methodology_remote_work.md","stage": "design",   "status": "final"},
+    {"skill": "data-analysis",       "file": "07-analysis/analysis_remote_work.md",      "stage": "analysis", "status": "draft"}
   ]
 }
 ```
@@ -97,12 +98,12 @@ The manifest is the **file index**. On top of it sits the **research vault** —
     "target_journal":       {"value": "J. Hypothetical Studies"}
   },
   "vault": {
-    "bibliography":  ".research/vault/bibliography.md",
-    "decisions":     ".research/vault/decisions.md",
-    "open_questions":".research/vault/open-questions.md",
-    "glossary":      ".research/vault/glossary.md",
-    "voice_profile": ".research/vault/voice-profile.md",
-    "entities":      ".research/vault/entities.md"
+    "bibliography":  "knowledge/bibliography.md",
+    "decisions":     "knowledge/decisions.md",
+    "open_questions":"knowledge/open-questions.md",
+    "glossary":      "knowledge/glossary.md",
+    "voice_profile": "knowledge/voice-profile.md",
+    "entities":      "knowledge/entities.md"
   }
 }
 ```
@@ -112,7 +113,7 @@ Each fact carries **provenance** (`source`) and `status`, so drift-checking can 
 ### Two hard rules for the workspace
 
 1. **Files are the source of truth; the manifest is advisory.** At intake, a skill reconciles the manifest against the actual files. If the manifest lists a file that does not exist, trust the filesystem and correct the manifest — never hallucinate the missing artifact's contents.
-2. **The workspace is opt-in.** A skill invoked standalone with explicit paths and no `.research/` behaves exactly as it always has. The manifest is a convenience for connected projects, never a requirement.
+2. **The workspace is opt-in.** A skill invoked standalone with explicit paths and no project vault behaves exactly as it always has. The vault is a convenience for connected projects, never a requirement.
 
 ---
 
@@ -120,7 +121,7 @@ Each fact carries **provenance** (`source`) and `status`, so drift-checking can 
 
 ### At intake
 
-1. Check for `.research/manifest.json`.
+1. Check for `research/<project>/manifest.json`.
 2. If present, read it to discover the upstream artifacts this skill needs (see the skill's Upstream list) — instead of asking the user for paths.
 3. **Read the vault.** Use `facts` (don't re-ask for sample size, journal, IRB#, language); cite from the canonical `bibliography.md` by key; use `glossary.md` terms; apply `voice-profile.md` where you write prose; consult `entities.md` and open `open-questions.md`.
 4. Reconcile against the filesystem (rule 1 above).
@@ -128,13 +129,13 @@ Each fact carries **provenance** (`source`) and `status`, so drift-checking can 
 
 ### At output
 
-1. Write the primary deliverable to `.research/<conventional-filename>`.
-2. Register or update its entry in the manifest (`skill`, `file`, `status`).
+1. Write the primary deliverable into its **stage folder** in the vault (e.g. methodology → `03-methodology/`, analysis → `07-analysis/`, drafts → `08-drafts/`; see the stage→folder map in [`research-vault.md`](./research-vault.md)).
+2. Register or update its entry in the manifest (`skill`, `file`, `stage`, `status`).
 3. **Update the vault.** Deposit new facts (with provenance); append decisions with rationale; add verified citations to `bibliography.md`; register/resolve `[… NEEDED]` markers in `open-questions.md`; update `glossary.md`. **Flag-on-write:** before writing a fact or citation that *conflicts* with the vault, stop and surface it (it's usually a distinct fact, occasionally a correction) — never silently overwrite.
 4. Advance `stage` if this skill completes a lifecycle stage.
 5. Surface the natural next step(s) from the skill's Downstream list.
 
-Full detail (note formats, the six `/vault audit` checks, the PII hard rule): [`docs/research-vault.md`](./research-vault.md).
+Full detail (note formats, the seven `/vault audit` checks, the PII hard rule): [`docs/research-vault.md`](./research-vault.md).
 
 ---
 
@@ -146,7 +147,7 @@ When a skill needs an upstream artifact that does not exist, or when it finishes
 
 - Skills carry `Skill` in their `allowed-tools`, so they can invoke another skill via the `Skill` tool — e.g. `Skill(methodology-advisor)`.
 - **The human gate is mandatory.** A skill never invokes another skill silently. It states what is missing (or what comes next), and asks the user to confirm before chaining. Example:
-  > "I don't see an analysis report in `.research/` — the Results section needs one. Want me to run `data-analysis` first? (I can invoke it now, or you can point me at an existing analysis file.)"
+  > "I don't see an analysis report in the project vault (`research/<project>/`) — the Results section needs one. Want me to run `data-analysis` first? (I can invoke it now, or you can point me at an existing analysis file.)"
 - Heavy stages may run in an isolated subagent via `context: fork` where appropriate.
 
 ### claude.ai
@@ -166,7 +167,7 @@ When a skill needs an upstream artifact that does not exist, or when it finishes
 
 | Mechanism | Claude Code | claude.ai |
 |---|---|---|
-| Shared workspace | `.research/` persists across sessions | sandbox filesystem within a session; re-upload artifacts across sessions; paste the manifest |
+| Shared workspace | the project vault (`research/<project>/`) persists across sessions | sandbox filesystem within a session; re-upload artifacts across sessions; paste the manifest |
 | Active invocation | `Skill(name)` tool, human-gated | "run /X next" → Claude loads X's approach inline if asked |
 | Stage isolation | subagent / `context: fork` | inline in the analysis sandbox |
 | Conductor | `/research` pipeline mode invokes stages | `/research` skill walks the stages sequentially in one conversation |

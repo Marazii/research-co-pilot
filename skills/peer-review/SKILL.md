@@ -1178,7 +1178,7 @@ If the user has not yet built the slides and is in early prep, redirect to the `
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Pre-submission audit — after drafting, before submission. (Also reviews homework, talks, and standalone documents.)
 
@@ -1186,7 +1186,7 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - `manuscript-drafter` → `manuscript_<section>_<topic>.md` — the draft to audit before submission.
 - `talk-builder` → a drafted deck, when run in presentation mode.
 - Standalone: any document the user supplies (`.docx` / `.pdf` / `.pptx` / `.tex`).
-- *At intake, check `.research/manifest.json` for a current draft before asking for a path.*
+- *At intake, check `research/<project>/manifest.json` for a current draft before asking for a path.*
 
 **Downstream (what this skill feeds):**
 - `reviewer-response` — when real reviewer comments arrive, this skill's structured issue categories map directly to the R&R intake.
@@ -1201,4 +1201,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* register substantive issues you raise as items in `open-questions.md` so they're tracked to resolution.
 - *Complements `/vault audit`:* peer-review audits the **paper**; `Skill(vault)` audit checks consistency across **all** project documents. Offer to run the vault audit too before submission.
 
-**Output to the workspace:** the structured review plus the annotated source file (`*_REVIEWED.*`). When part of a project, save under `.research/` and register in the manifest; advance `stage` to `pre-submission`.
+**Output to the vault:** the structured review plus the annotated source file (`*_REVIEWED.*`). When part of a project, save into `research/<project>/09-review/` and register in the manifest; advance `stage` to `pre-submission`.

@@ -277,14 +277,14 @@ Before declaring done:
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Analysis (qualitative) — after data collection, before drafting.
 
 **Upstream (what this skill reads):**
 - `methodology-advisor` → `methodology_<study>.md` — the qualitative tradition (thematic / grounded theory / IPA / etc.) and the analysis plan.
 - The **transcripts / corpus** themselves.
-- *At intake, check `.research/manifest.json` for the methodology before asking for the tradition.*
+- *At intake, check `research/<project>/manifest.json` for the methodology before asking for the tradition.*
 
 **Downstream (what this skill feeds):**
 - `manuscript-drafter` — the themes report becomes the Findings section, with quotes + participant IDs preserved.
@@ -296,6 +296,6 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 **Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
 - *Read at intake:* `facts` (sample size) and the methodology's qualitative tradition.
 - *Write at output:* deposit participants into `entities.md` as **pseudonyms + non-identifying attributes only** (e.g., "P03 — ICU nurse, 8 yrs"); add codes/themes/operationalizations to `glossary.md`.
-- *PII hard rule:* the real-name → pseudonym key stays **off-system**, exactly as Phase 2 requires — it is never written into `entities.md` or anywhere in `.research/`. The vault holds pseudonyms only.
+- *PII hard rule:* the real-name → pseudonym key stays **off-system**, exactly as Phase 2 requires — it is never written into `entities.md` or anywhere in `research/<project>/`. The vault holds pseudonyms only.
 
-**Output to the workspace:** write the codebook + themes report (+ anonymization key kept separate) under `.research/`, register in the manifest, advance `stage` to `analysis`.
+**Output to the vault:** write the codebook + themes report (+ anonymization key kept separate) into `research/<project>/07-analysis/`, register in the manifest, advance `stage` to `analysis`.

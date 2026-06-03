@@ -194,7 +194,7 @@ Report self-audit results to the user along with the draft.
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Funding — a parallel track, drawn on whenever a proposal is in play.
 
@@ -202,7 +202,7 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - `research-brainstorm` → `brainstorm_<topic>.md` — the sharpened aims.
 - `methodology-advisor` → `methodology_<study>.md` — becomes the Approach section.
 - `literature-review` → `lit_review_<topic>.md` — the gap analysis + key citations become Significance.
-- *At intake, check `.research/manifest.json` for these before asking for paths.*
+- *At intake, check `research/<project>/manifest.json` for these before asking for paths.*
 
 **Downstream (what this skill feeds):**
 - `citation-formatter` — normalize the bibliography to the funder's required style.
@@ -216,4 +216,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* `facts` (sample size, preregistration, funding), the canonical `bibliography.md` (cite by key — Significance draws on the same verified sources as the paper), and `voice-profile.md` (so the proposal reads in the PI's voice).
 - *Write at output:* deposit the `funding` fact (funder + mechanism) once known; register `[PRELIMINARY DATA NEEDED]` / `[CITATION NEEDED]` items in `open-questions.md`; append framing decisions to `decisions.md`.
 
-**Output to the workspace:** write `grant_<funder>_<section>.md` under `.research/`, register it in the manifest.
+**Output to the vault:** write `grant_<funder>_<section>.md` into `research/<project>/08-drafts/`, register it in the manifest.

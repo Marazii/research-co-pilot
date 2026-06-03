@@ -171,14 +171,14 @@ Report self-audit results to the user along with the package, especially noting 
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Revision — after an R&R decision, before resubmission.
 
 **Upstream (what this skill reads):**
 - `peer-review` → review output — if the comments came from a `peer-review` run (e.g., a colleague's pre-submission feedback), feed it directly; the Phase 2 categorization maps cleanly. Or the journal's actual reviewer letter.
 - `manuscript-drafter` → the submitted manuscript being revised.
-- *At intake, check `.research/manifest.json` for the manuscript and any prior review/response before asking for paths.*
+- *At intake, check `research/<project>/manifest.json` for the manuscript and any prior review/response before asking for paths.*
 
 **Downstream (what this skill feeds):**
 - `manuscript-drafter` — for any revision longer than a paragraph, delegate so the new prose preserves the manuscript's voice profile.
@@ -194,4 +194,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* append revision decisions to `decisions.md`; record new facts (e.g., a re-run analysis's updated estimate, as a distinct fact); add new citations to `bibliography.md`; resolve the `[REVIEWER CONCERN UNADDRESSED]` / `[… NEEDED]` items you close.
 - *Flag-on-write:* if a revision changes a vault fact (a re-analysis moves N or an estimate), surface and record it rather than letting the response and the manuscript diverge.
 
-**Output to the workspace:** write the `response_to_reviewers_<round>/` package under `.research/`, register it in the manifest, advance `stage` to `revision`.
+**Output to the vault:** write the `response_to_reviewers_<round>/` package into `research/<project>/09-review/`, register it in the manifest, advance `stage` to `revision`.

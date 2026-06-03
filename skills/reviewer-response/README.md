@@ -45,7 +45,7 @@ See [`examples/reviewer-response/`](../../examples/reviewer-response/) for a wor
 
 ## Composes well with
 
-*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `research/<project>/` vault live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
 
 - **`peer-review`** — When you've gotten pre-submission feedback from a colleague via peer-review, the output of that review is a clean input here. The categorization in Phase 2 maps directly.
 - **`manuscript-drafter`** — For any revision longer than one paragraph, this skill delegates to manuscript-drafter so the new prose extracts and preserves the existing manuscript's voice profile + register rules.

@@ -374,7 +374,7 @@ Report the results of the self-audit to the user along with the draft, especiall
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Drafting — after analysis, before peer review.
 
@@ -384,7 +384,7 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - `qualitative-coding` → themes report / codebook — every theme in Findings traces back here.
 - `literature-review` → `lit_review_<topic>.md` — the related-work synthesis + verified bibliography.
 - The **existing manuscript draft** (for voice extraction) and the **bibliography**.
-- *At intake, check `.research/manifest.json` for these before asking the user for paths; reconcile against the filesystem (files win).*
+- *At intake, check `research/<project>/manifest.json` for these before asking the user for paths; reconcile against the filesystem (files win).*
 
 **Downstream (what this skill feeds):**
 - `citation-formatter` — hand the draft's bibliography for style normalization once `[CITATION NEEDED]` markers are resolved.
@@ -401,4 +401,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* **write `voice-profile.md` once** (your Phase 3 profile, so talk/grant/response reuse it); append content-cut and framing decisions to `decisions.md`; register every `[CITATION NEEDED]` / `[LITERATURE NEEDED]` in `open-questions.md`; add any new verified citation to `bibliography.md`.
 - *Flag-on-write:* any number you'd state (N, effect size) that conflicts with a vault fact → stop and surface it before writing.
 
-**Output to the workspace:** write `manuscript_<section>_<topic>.md` under `.research/`, register it in the manifest, and advance `stage` to `drafting`.
+**Output to the vault:** write `manuscript_<section>_<topic>.md` into `research/<project>/08-drafts/`, register it in the manifest, and advance `stage` to `drafting`.

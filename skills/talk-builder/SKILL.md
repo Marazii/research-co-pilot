@@ -321,14 +321,14 @@ For a talk drawn from a thesis or a body of work:
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Dissemination — turn a finished paper into a talk. Often terminal.
 
 **Upstream (what this skill reads):**
 - `manuscript-drafter` → `manuscript_<section>_<topic>.md` (or the finished paper) — the source material.
 - `literature-review` → `lit_review_<topic>.md` — field framing for invited talks / keynotes that position the work in a larger narrative.
-- *At intake, check `.research/manifest.json` for a draft/paper before asking for one.*
+- *At intake, check `research/<project>/manifest.json` for a draft/paper before asking for one.*
 
 **Downstream (what this skill feeds):**
 - `peer-review` (presentation mode) — a pre-conference critique of the drafted deck.
@@ -342,4 +342,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Write at output:* light — register any "need a better figure / number to confirm" items in `open-questions.md`.
 - *Flag-on-write:* a statistic on a slide that conflicts with a vault fact → surface it; the talk must not state a different N or effect size than the manuscript.
 
-**Output to the workspace:** write `talk_<short_title>_<minutes>min.md` (+ optional Marp/Quarto/reveal.js/Beamer stub) under `.research/`, register it in the manifest, set `stage` to `dissemination`.
+**Output to the vault:** write `talk_<short_title>_<minutes>min.md` (+ optional Marp/Quarto/reveal.js/Beamer stub) into `research/<project>/10-dissemination/`, register it in the manifest, set `stage` to `dissemination`.

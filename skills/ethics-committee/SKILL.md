@@ -294,14 +294,14 @@ For an **ethics statement** (paper or grant) rather than a decision letter, prod
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Ethics — after study design, before data collection. Acts as a gate.
 
 **Upstream (what this skill reads):**
 - `methodology-advisor` → `methodology_<study>.md` — the design + data plan to audit.
 - `replication-designer` → `replication_design_<title>.md` — replications re-trigger ethics review even when the original was approved.
-- *At intake, check `.research/manifest.json` for the methodology before asking for the protocol.*
+- *At intake, check `research/<project>/manifest.json` for the methodology before asking for the protocol.*
 
 **Downstream (what this skill feeds):**
 - The **data-collection gate** — the protocol should clear this audit before any data is collected.
@@ -315,6 +315,6 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 **Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
 - *Read at intake:* `facts` (sample size, population) and the methodology.
 - *Write at output:* once approval details exist, deposit the `irb_number` fact (+ consent/data-plan facts) with provenance; append ethics-relevant decisions to `decisions.md`.
-- *PII reminder:* the vault never holds participant identifiers. Real names → the off-system key (as qualitative-coding requires); `entities.md` holds pseudonyms only. If the protocol's data plan would put identifiers anywhere in `.research/`, flag it.
+- *PII reminder:* the vault never holds participant identifiers. Real names → the off-system key (as qualitative-coding requires); `entities.md` holds pseudonyms only. If the protocol's data plan would put identifiers anywhere in `research/<project>/`, flag it.
 
-**Output to the workspace:** write `ethics_review_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `ethics`. Reminder: this is a self-audit, not institutional approval.
+**Output to the vault:** write `ethics_review_<study>.md` into `research/<project>/04-ethics/`, register it in the manifest, advance `stage` to `ethics`. Reminder: this is a self-audit, not institutional approval.

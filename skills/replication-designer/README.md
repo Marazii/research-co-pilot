@@ -44,7 +44,7 @@ See [`examples/replication-designer/`](../../examples/replication-designer/) for
 
 ## Composes well with
 
-*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `research/<project>/` vault live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
 
 - **`methodology-advisor`** — Replication-designer adopts most of the original methodology; methodology-advisor pressure-tests deviations.
 - **`ethics-committee`** — Replications often re-trigger ethics review even when the original was approved. Run ethics-committee on the replication protocol.

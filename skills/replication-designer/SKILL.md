@@ -227,7 +227,7 @@ Write `replication_design_<short_title>.md`:
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Design (replication track) — can seed a fresh lit-review → methodology cycle.
 
@@ -248,4 +248,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* `bibliography.md` (the target paper + related work) and `facts`.
 - *Write at output:* deposit replication `facts` — target effect size, the power-based replication `sample_size`, the `preregistration` link — with provenance; append every deviation-from-original decision to `decisions.md` with rationale; add the original to `bibliography.md` with a cite-key; register open questions (materials availability, original-author contact).
 
-**Output to the workspace:** write `replication_design_<short_title>.md` under `.research/`, register it in the manifest, set `stage` to `design`.
+**Output to the vault:** write `replication_design_<short_title>.md` into `research/<project>/03-methodology/`, register it in the manifest, set `stage` to `design`.

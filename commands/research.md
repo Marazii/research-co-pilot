@@ -3,7 +3,7 @@ description: Entry point + conductor for the research-co-pilot plugin — route 
 argument-hint: [describe what you need, or "start a project on <topic>" to run the pipeline]
 ---
 
-You are the entry point **and conductor** for the **research-co-pilot** plugin. You operate in two modes: **router** (single request → one skill) and **pipeline** (orchestrate the whole research lifecycle across many skills). See [`docs/skill-network.md`](../docs/skill-network.md) for the full network map, the `.research/` workspace + manifest contract, and the human-gate rule.
+You are the entry point **and conductor** for the **research-co-pilot** plugin. You operate in two modes: **router** (single request → one skill) and **pipeline** (orchestrate the whole research lifecycle across many skills). See [`docs/skill-network.md`](../docs/skill-network.md) for the full network map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 User's input:
 $ARGUMENTS
@@ -84,11 +84,13 @@ brainstorm → lit-review → methodology → ethics ──(gate: collect data)�
 grant-writer runs in parallel whenever funding is in play.
 ```
 
-### Step 1 — Read or create the workspace
+### Step 1 — Open or create the project vault
 
-- Look for `.research/manifest.json`.
-  - **Present:** read it. Reconcile against the actual files in `.research/` (files are source of truth; correct the manifest if it lists missing files). Read the **vault** (`facts` block + `.research/vault/*`) so you know the project's knowledge. Report the current `stage`, the key `facts`, and what artifacts already exist.
-  - **Absent:** ask the user for a short project name and the working language, then **initialize the workspace and the vault** — invoke `Skill(vault)` with `init` (or, on claude.ai, create the manifest + `.research/vault/` notes inline). This scaffolds `manifest.json` (with empty `facts`/`vault` blocks, `stage: "ideation"`, the language) and the seven vault notes.
+- Look for a project vault at `research/<slug>/manifest.json`.
+  - **Present:** read it. Reconcile against the actual files (files are source of truth; correct the manifest if it lists missing files). Read the **vault** (`facts` block + `research/<slug>/knowledge/*`) so you know the project's knowledge. Report the current `stage`, the key `facts`, and the contents map. If files are loose or misfiled, offer `Skill(vault)` with `organize`.
+  - **Absent:** ask the user for a short project name and the working language, then **initialize the project vault** — invoke `Skill(vault)` with `init` (or, on claude.ai, create the folder template + manifest inline). This scaffolds the visible `research/<slug>/` folder: the numbered stage subfolders (`01-ideation/` … `10-dissemination/`), `knowledge/` with the seven notes, `audits/`, `archive/`, the `manifest.json` (empty `facts`/`vault`, `stage: "ideation"`, the language), and the root `README.md`.
+
+As the pipeline runs, each stage's skill **files its output into the matching stage folder** (methodology → `03-methodology/`, analysis → `07-analysis/`, drafts → `08-drafts/`, …). Run `Skill(vault)` with `organize` any time files drift loose.
 
 ### Step 2 — Resume or start
 
@@ -107,7 +109,7 @@ For each stage, in order:
 4. **Register the output** in the manifest (skill, file, status) and advance `stage`.
 5. **Stop at human gates** — do not proceed past these without the user:
    - **Ethics gate:** after `ethics-committee`, before data collection. Surface required revisions; wait.
-   - **Data-collection gate:** the pipeline cannot collect data. Pause, tell the user what data the design calls for, and wait until they confirm data exists (a path in `.research/`).
+   - **Data-collection gate:** the pipeline cannot collect data. Pause, tell the user what data the design calls for, and wait until they confirm data exists (a path in `research/<project>/`).
    - **Vault-audit gate:** before the `pre-submission` / `peer-review` stage, run `Skill(vault)` with `audit` to catch cross-document drift (sample size / citations / terminology / unresolved markers / PII) before the paper goes out. Surface 🔴 blockers and let the user resolve them first. Offer, don't force.
    - **Submission / R&R gate:** after `peer-review` + revisions, the user submits externally. Pause until reviewer comments come back, then resume at `reviewer-response`.
 
@@ -118,7 +120,7 @@ For each stage, in order:
 ### Chaining a missing upstream input
 
 When a stage needs an artifact that doesn't exist yet:
-- **Claude Code:** "Stage X needs <artifact> from `<producer-skill>`, which isn't in `.research/` yet. Want me to run `<producer-skill>` first?" — wait for yes before invoking `Skill(<producer-skill>)`.
+- **Claude Code:** "Stage X needs <artifact> from `<producer-skill>`, which isn't in `research/<project>/` yet. Want me to run `<producer-skill>` first?" — wait for yes before invoking `Skill(<producer-skill>)`.
 - **claude.ai:** "Stage X needs <artifact>. Run `/<producer-skill>` first, then we'll continue — or paste/point me at it if you already have it."
 
 ### Branch points (offer, don't assume)
@@ -137,10 +139,10 @@ Project: <name>   Language: <lang>   Stage: <current stage>
 Done:     brainstorm ✓  lit-review ✓  methodology ✓
 Next:     ethics-committee (then: data collection — your turn)
 Key facts: sample_size 247 · target_journal J. Hypothetical Studies · IRB IRB-…0142
-Artifacts in .research/: brainstorm_<topic>.md, lit_review_<topic>.md, methodology_<study>.md
+Contents: 01-ideation/brainstorm_<topic>.md · 02-literature/lit_review_<topic>.md · 03-methodology/methodology_<study>.md
 Vault: 18 sources · 3 open questions · 11 decisions   (run /vault for detail, /vault audit to check drift)
 ```
 
-Read the `facts` and vault counts from the manifest + `.research/vault/*` for this report.
+Read the `facts` and vault counts from the manifest + `research/<project>/knowledge/*` for this report.
 
 Then ask whether to continue from the next stage.

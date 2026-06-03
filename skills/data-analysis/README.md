@@ -39,7 +39,7 @@ See [`examples/data-analysis/`](../../examples/data-analysis/) for a worked samp
 
 ## Composes well with
 
-*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `research/<project>/` vault live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
 
 - **`methodology-advisor`** — The Analysis Plan section of a methodology document is direct input here. The Creative AI / ML / Big Data section often suggests modeling extensions data-analysis can execute.
 - **`data-cruncher` subagent** — For heavy computation (many model variants, sensitivity grids, simulation-based power, cross-validation), data-analysis spawns the data-cruncher subagent to work in isolation.

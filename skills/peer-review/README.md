@@ -47,7 +47,7 @@ See [`examples/peer-review/`](../../examples/peer-review/) for a worked sample.
 
 ## Composes well with
 
-*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `research/<project>/` vault live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
 
 - **`manuscript-drafter`** — Submit your manuscript-drafter output to peer-review for a pre-submission audit before sending to a journal.
 - **`reviewer-response`** — When you receive an R&R, this skill's output structure (categorized issues + line-anchored comments) maps directly to reviewer-response's intake.

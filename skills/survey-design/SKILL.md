@@ -221,13 +221,13 @@ Produce `survey_<topic>.md`:
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Instrument — after study design, before data collection.
 
 **Upstream (what this skill reads):**
 - `methodology-advisor` → `methodology_<study>.md` — the constructs to measure and the sampling plan.
-- *At intake, check `.research/manifest.json` for the methodology before asking what to measure.*
+- *At intake, check `research/<project>/manifest.json` for the methodology before asking what to measure.*
 
 **Downstream (what this skill feeds):**
 - `data-analysis` — once the survey is fielded, the analysis plan picks up the responses.
@@ -241,4 +241,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* `facts` and the methodology's constructs; `glossary.md`.
 - *Write at output:* add construct operationalizations + scale abbreviations to `glossary.md`; record instruments and variables in `entities.md` (non-PII); register any validated-scale sourcing as `[CITATION NEEDED]` resolved into `bibliography.md`.
 
-**Output to the workspace:** write `survey_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `instrument`.
+**Output to the vault:** write `survey_<topic>.md` into `research/<project>/05-instruments/`, register it in the manifest, set `stage` to `instrument`.

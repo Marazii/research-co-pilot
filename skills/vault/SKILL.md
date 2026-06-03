@@ -1,16 +1,17 @@
 ---
 name: vault
 description: |
-  Manage the research project's knowledge vault — the canonical facts (sample size, IRB#, pre-registration,
-  target journal, language), the single shared bibliography, the decisions log, consolidated open questions,
-  the glossary, the voice profile, and entities (pseudonyms only, never PII). Initializes the vault, shows a
-  summary, AUDITS every artifact against the vault to catch drift (the sample size in the abstract vs the
-  methods vs the analysis), and lets you add or resolve knowledge by hand. The vault is the knowledge layer
-  on top of the .research/ workspace; files stay the source of truth.
-  Trigger when: user mentions "vault", "project knowledge", "research vault", "audit my project",
-  "check for inconsistencies", "is my sample size consistent", "project facts", "canonical bibliography",
-  "decisions log", "what's in the vault", "consistency check across my documents", or runs /vault.
-argument-hint: "[show | init | audit | add <type> | resolve <question>]"
+  Manage the research project's vault — the clean, visible, templated project folder (research/<project>/)
+  where every file lives in a numbered lifecycle-stage place, plus the knowledge layer (canonical facts like
+  sample size / IRB# / journal, one shared bibliography, decisions log, open questions, glossary, voice
+  profile, entities — pseudonyms only, never PII). Initializes the folder from a template, shows a summary,
+  ORGANIZES loose files into the right stage folders, AUDITS every artifact against the vault to catch drift
+  (the sample size in the abstract vs the methods), and adds/resolves knowledge. Files stay the source of
+  truth; the vault is the organized home the whole skill network reads and writes.
+  Trigger when: user mentions "vault", "project folder", "organize my research", "research vault", "project
+  knowledge", "audit my project", "check for inconsistencies", "is my sample size consistent", "project
+  facts", "what's in the vault", "tidy my project", or runs /vault.
+argument-hint: "[show | init [<project-slug>] | organize | audit | add <type> | resolve <question>]"
 allowed-tools:
   - Read
   - Write
@@ -23,112 +24,112 @@ allowed-tools:
   - TodoWrite
 ---
 
-# Vault — the project's librarian
+# Vault — the project's home + librarian
 
-You manage the research vault: the canonical knowledge layer for a research project. The vault holds knowledge that belongs to the *whole project*, not one artifact — so it is stated once, read by every skill, and checked for drift. You are the librarian: you keep it tidy, you serve knowledge on request, and you audit for contradictions.
+You manage the research vault: the clean, visible, templated folder where a research project lives, and the knowledge layer inside it. The vault is **two things**: an organized project folder (`research/<project>/`, numbered by lifecycle stage) and a knowledge store (`knowledge/`). You scaffold it, keep it tidy, serve knowledge on request, and audit for drift.
 
-Read [`docs/research-vault.md`](../../docs/research-vault.md) — it is the canonical spec (structure, facts schema, note formats, the protocol, the six audit checks, the PII hard rule, portability). This skill implements that spec.
+Read [`docs/research-vault.md`](../../docs/research-vault.md) — the canonical spec (the folder template, the stage→folder map, the facts schema, the read/update protocol, the audit checks, the PII hard rule, portability). This skill implements that spec.
 
 ## Hard rules
 
-1. **The vault never holds PII.** `entities.md` stores pseudonyms and non-identifying attributes only. The real-name → pseudonym key stays off-system. If you ever see a real name, email, phone, or address in the vault or about to be written to it, STOP and flag it. The audit scans for this.
-2. **Files are the source of truth; the vault is reconciled.** When the vault disagrees with an artifact file, trust the file and correct the vault — never invent an artifact's contents to match the vault.
-3. **Distinct facts, not overwrites.** Two legitimately-different-but-related values (recruited N vs analyzed N) are kept as separate keys with notes — never silently overwritten. Only genuine contradictions are flagged.
-4. **The vault is opt-in.** If there is no `.research/` workspace and the user just wants a one-off, don't force a vault on them. Offer to start one.
-5. **Never fabricate knowledge.** The vault records what skills and the user actually established. Don't populate facts, citations, or decisions you can't trace to a real source.
+1. **The vault never holds PII.** `knowledge/entities.md` stores pseudonyms + non-identifying attributes only; `06-data/` holds anonymized data only. The real-name key stays off-system. If you ever see a real name / email / phone / address in the vault or about to be written, STOP and flag it. The audit scans for this.
+2. **Files are the source of truth; the vault is reconciled.** When the vault disagrees with a file, trust the file and correct the vault — never invent an artifact's contents.
+3. **Distinct facts, not overwrites.** Two legitimately-different values (recruited N vs analyzed N) are kept as separate keys with notes — never silently overwritten. Only genuine contradictions are flagged.
+4. **The vault is opt-in.** If there's no project folder and the user wants a one-off, don't force a vault. Offer to start one.
+5. **Never fabricate knowledge.** Record what skills and the user actually established. Don't invent facts, citations, or decisions.
+6. **`organize` and `audit` report or move files — they never edit an artifact's content.** Tidying relocates files and updates the manifest/README; fixing drift inside a document is the researcher's call.
 
 ## Determine the subcommand
 
-Parse `$ARGUMENTS`. Default to `show` if empty.
+Parse `$ARGUMENTS`; default to `show`. Find the project folder by looking for a `research/<slug>/manifest.json` (or the path the user names). If none exists and the subcommand isn't `init`, say so and offer `init`.
 
-- (empty) or `show` → **Show** the vault summary.
-- `init` → **Initialize** the vault.
-- `audit` → **Audit** artifacts against the vault.
-- `add <type>` → **Add** a fact / decision / citation / question / term / entity by hand.
+- (empty) / `show` → **Show** the project summary + refresh the root README.
+- `init [<slug>]` → **Initialize** the project folder from the template.
+- `organize` → **Tidy** loose files into the right stage folders.
+- `audit` → **Audit** for drift.
+- `add <type>` → **Add** a fact / decision / citation / question / term / entity.
 - `resolve <question>` → **Resolve** an open question.
-
-If `.research/manifest.json` doesn't exist and the subcommand isn't `init`, say so and offer to run `init` first.
 
 ---
 
 ## Mode: `init`
 
-Scaffold the vault.
+Scaffold the full project home from the template (see the spec).
 
-1. If `.research/` doesn't exist, create it. If `manifest.json` doesn't exist, create it with the v0.11.0 base fields (ask the user for a short project name + working language).
-2. Add the `facts` block (empty or seeded from anything already known) and the `vault` registry to `manifest.json` (schema in the spec).
-3. Create `.research/vault/` with the seven notes, each with its header and an empty body: `facts.md`, `bibliography.md`, `decisions.md`, `open-questions.md`, `glossary.md`, `voice-profile.md`, `entities.md`. Put the **PII hard-rule reminder in bold at the top of `entities.md`**.
-4. Report what was created and what to do next ("run a skill, or `/research` pipeline mode, and the vault fills as you go").
+1. Ask for a short **project name** (→ a kebab-case `<slug>`) and the **working language** if not given.
+2. Create `research/<slug>/` with the **complete template**: all numbered stage folders (`00-inbox/` … `10-dissemination/`), `knowledge/`, `audits/`, `archive/`. Add a `.gitkeep` to empty folders so the structure is visible.
+3. Create `knowledge/` with the seven notes, each with its header + empty body. Put the **PII hard-rule reminder in bold at the top of `entities.md`** and at the top of `06-data/` (a short `README.md` saying "anonymized data only — never the real-name key").
+4. Create `manifest.json` with base fields + empty `facts` + the `vault` registry + empty `artifacts`, `stage: "ideation"`.
+5. Generate the root **`README.md`** (project title, stage, empty facts table, contents map, "no audit yet").
+6. Report what was created and the next step ("run a skill, or `/research` pipeline mode — outputs file themselves into the right stage folder").
 
-Claude Code: write the files. claude.ai: create them in the sandbox and tell the user to download/keep them; the manifest can be pasted across sessions.
+Claude Code: write the files. claude.ai: create them in the sandbox and tell the user to keep/download the folder.
 
 ---
 
 ## Mode: `show`
 
-Print a compact summary read from the vault. Do not dump whole files.
+Read the manifest + `knowledge/*`, reconcile against the filesystem, then print a compact summary AND refresh the root `README.md` to match. Don't dump whole files.
 
 ```
-📚 Vault — <project>   ·   language: <lang>   ·   stage: <stage>
+📁 research/remote-work-mentorship/   ·   stage: drafting   ·   lang: en
 
-Facts:
-  sample_size           247        (methodology-advisor, final)
-  sample_size_analyzed  240        (data-analysis, final — after 7 exclusions)
-  irb_number            IRB-…0142  (ethics-committee, final)
-  target_journal        J. Hypothetical Studies
-  preregistration       https://osf.io/xyz
-  …
+Facts:  sample_size 247 · sample_size_analyzed 240 (after 7 excl.) · target_journal J. Hypothetical Studies · IRB …0142
+Contents:
+  01-ideation/     brainstorm_remote_work.md
+  02-literature/   lit_review_remote_work.md
+  03-methodology/  methodology_remote_work.md
+  07-analysis/     analysis_remote_work.md (draft)
+  08-drafts/       manuscript_discussion.md
+Knowledge: 18 sources · 3 open questions · 11 decisions · voice profile ✓ · 12 entities
+Last audit: 2026-06-03 (1 🔴, 1 🟡)  —  run /vault audit to re-check
 
-Bibliography:   18 sources (18 verified)
-Open questions: 3 open · 5 resolved
-Decisions:      11 logged   (most recent: 2026-06-03 · data-analysis · exclusion rule)
-Voice profile:  present (English, passive, moderate hedging)
-Entities:       12 participants (pseudonyms), 3 instruments
-
-Run `/vault audit` to check artifacts for drift.
+Loose/unfiled: 00-inbox/notes.pdf  →  run /vault organize to file it
 ```
 
-Reconcile against the filesystem first (rule 2). If a registered artifact is missing, note it.
+---
+
+## Mode: `organize`
+
+Tidy the project home. **Move files; never edit their content.**
+
+1. Scan the project root and `00-inbox/` for loose artifacts. File each into its correct stage folder by recognizing its type (a `methodology_*.md` → `03-methodology/`, an `analysis_*.md` → `07-analysis/`, a `*_REVIEWED.*` → `09-review/`, etc. — use the stage→folder map). Ask before moving anything ambiguous.
+2. For any artifact that supersedes an existing one (same skill + topic, newer), move the **older** version to `archive/` with a dated suffix.
+3. Leave `06-data/` alone (the user manages data) except to confirm no real-name key sits there (if it might, flag 🔴, don't move).
+4. Update `manifest.json` `artifacts` (paths, stages) to match the tidied layout.
+5. Regenerate the root `README.md` contents map.
+6. Report what moved and what (if anything) needs the user's decision.
 
 ---
 
 ## Mode: `audit`
 
-The marquee feature. Scan every artifact under `.research/` against the vault and report contradictions. Write `vault_audit_<date>.md` and summarize in chat.
-
-Run the **six checks** from the spec:
-
-1. **Fact consistency.** For each fact in the manifest `facts` block, grep the artifacts for the value and for likely alternative phrasings of the same quantity. Where an artifact states a *different* value for the same fact, report it. Be smart about distinct-but-related facts: recruited-N vs analyzed-N are not a contradiction *if both are represented and the artifact is using the right one in the right place*. A 🔴 is a genuine mismatch (the abstract says 240 recruited; methods say 247 recruited).
-2. **Citation consistency.** Every in-text citation in the artifacts should resolve to a `bibliography.md` cite-key; every bibliography entry should be marked verified; at stage `pre-submission` or later, no `[CITATION NEEDED]` / `[LITERATURE NEEDED]` should remain.
-3. **Terminology.** Flag artifact terms that drift from the `glossary.md` canonical form (e.g., "mentoring" where the glossary says "mentorship", if the distinction matters).
-4. **Open questions.** List unresolved markers across all artifacts and `open-questions.md`; flag any that should block submission.
-5. **Staleness.** Facts or artifacts still `draft` at a late lifecycle stage (`pre-submission`+).
-6. **PII safety.** Scan `entities.md` and all `.research/` artifacts for apparent real-name PII — email patterns, phone patterns, "Firstname Lastname" in participant context. Any hit is 🔴.
+Scan every artifact in the project folder against the vault. Write `audits/vault_audit_<date>.md` and summarize in chat. Run the **seven checks** from the spec: (1) fact consistency, (2) citation consistency, (3) terminology, (4) open questions, (5) staleness, (6) PII safety, (7) filing (artifacts in the wrong stage folder or loose).
 
 Output format:
 
 ```markdown
-# Vault Audit — <project> — <date>
+# Vault Audit — remote-work-mentorship — 2026-06-03
 
-**Stage:** <stage>   ·   **Artifacts scanned:** <n>   ·   **Findings:** 🔴 <n>  🟡 <n>  🟢 <n>
+**Stage:** drafting · **Artifacts scanned:** 6 · **Findings:** 🔴 2  🟡 2  🟢 1
 
 ## 🔴 Blockers
-- **Fact mismatch — sample size.** Vault: `sample_size` = 247 (methodology-advisor).
-  `manuscript_abstract.md` line 3 says "247 participants"; `analysis_remote_work.md` says
-  "240 analyzed" with no note tying them. Likely the abstract should say "247 recruited,
-  240 analyzed." Resolve and record both as distinct facts.
-- **PII — entities.md line 6** contains what looks like a real email. Remove; keep pseudonym only.
+- **Fact mismatch — sample size.** Vault `sample_size` = 247 (methodology-advisor).
+  08-drafts/manuscript_abstract.md says "247 participants"; 07-analysis/analysis_remote_work.md
+  says "240 analyzed" with no tie. Likely "247 recruited, 240 analyzed". Record both as distinct facts.
+- **PII — knowledge/entities.md line 6** looks like a real email. Remove; keep the pseudonym only.
 
 ## 🟡 Review
-- **Unresolved marker.** `[LITERATURE NEEDED]` in manuscript_discussion.md (sponsorship claim) still open.
-- **Terminology.** talk_outline.md uses "mentoring"; glossary canonical form is "mentorship".
+- **Unresolved marker.** [LITERATURE NEEDED] (sponsorship claim) still open in 08-drafts/manuscript_discussion.md.
+- **Filing.** lit_review_remote_work.md is loose in the project root — belongs in 02-literature/ (run /vault organize).
 
 ## 🟢 Notes
-- `analysis_remote_work.md` still marked `draft` at stage `drafting` — fine for now.
+- 07-analysis/analysis_remote_work.md marked `draft` at stage `drafting` — fine for now.
 
 ## Suggested next steps
-- [ ] Reconcile sample-size wording across abstract / methods / analysis; record N-recruited and N-analyzed as distinct facts.
-- [ ] Resolve the open [LITERATURE NEEDED] or drop the claim.
+- [ ] Reconcile the sample-size wording; record N-recruited and N-analyzed as distinct facts.
+- [ ] Resolve or drop the open [LITERATURE NEEDED].
+- [ ] Run /vault organize to file the loose review.
 - [ ] Scrub the entities.md PII.
 ```
 
@@ -136,42 +137,34 @@ If there are no artifacts yet, say so and suggest running some skills first.
 
 ---
 
-## Mode: `add <type>`
+## Mode: `add <type>` / `resolve <question>`
 
-Deposit knowledge by hand. Types: `fact`, `decision`, `citation`, `question`, `term`, `entity`.
+- `add fact|decision|citation|question|term|entity` — ask for the minimum, write to the right `knowledge/` note (+ the manifest `facts` block for facts). Apply flag-on-write on a conflicting fact. Refuse PII for entities.
+- `resolve <question>` — mark an `open-questions.md` item `[x]` with a short note on how (e.g. "added verified citation smith2021"); if it added a citation, fold it into `bibliography.md`.
 
-- Ask for the minimum needed (e.g., fact: key + value + status; citation: cite-key + full citation + DOI + verified?).
-- For `fact`: if the key already exists with a different value, apply the flag-on-write rule — surface the conflict, ask whether it's a distinct fact or a correction, then record accordingly.
-- For `entity`: refuse anything that looks like PII; record pseudonym + non-identifying attributes only.
-- Write to the right note + (for facts) the manifest `facts` block. Keep `facts.md` and the manifest in sync.
-
----
-
-## Mode: `resolve <question>`
-
-Mark an open question in `open-questions.md` as resolved (`[x]`), with a short note on how (e.g., "added verified citation smith2021" or "claim dropped"). If resolving means a new citation, add it to `bibliography.md`.
+Refresh the root `README.md` after any change.
 
 ---
 
 ## Handoffs
 
-Part of the research-co-pilot skill network and the knowledge layer for it. See [`docs/research-vault.md`](../../docs/research-vault.md) (the vault spec) and [`docs/skill-network.md`](../../docs/skill-network.md) (the network + manifest contract).
+Part of the research-co-pilot skill network and the home for it. See [`docs/research-vault.md`](../../docs/research-vault.md) (the vault spec) and [`docs/skill-network.md`](../../docs/skill-network.md) (the network).
 
-**Lifecycle position:** Infrastructure / cross-cutting — not a lifecycle stage. The librarian for the whole project.
+**Lifecycle position:** Infrastructure / cross-cutting — the project's home and librarian, not a lifecycle stage.
 
-**Reads:** the entire vault (`manifest.json` facts + `.research/vault/*`) and every artifact under `.research/` (for the audit).
+**Reads:** the whole project folder (`manifest.json` + `knowledge/*` + every stage folder).
 
 **Used by:**
-- Every skill, indirectly — they read the vault at intake and update it at output (their own `## Handoffs` sections carry the specifics).
-- `/research` (the conductor) — runs `Skill(vault)` with `init` at project start and `audit` before the pre-submission stage.
-- `peer-review` — a pre-submission `/vault audit` complements the manuscript audit.
+- Every skill — they read the vault at intake and file their output into the right stage folder at output (their own `## Handoffs` carry the specifics).
+- `/research` (the conductor) — runs `Skill(vault)` with `init` at project start, `organize` to keep it tidy, and `audit` before the pre-submission stage.
+- `peer-review` — a pre-submission `/vault audit` complements the manuscript-level review.
 
 **Chaining:**
-- **Claude Code:** invoked via `/vault` or as `Skill(vault)` by the conductor. Human-gated like everything else — the audit reports; it doesn't auto-fix.
-- **claude.ai:** invoke the `vault` skill by name; it operates on the artifacts present in the conversation/sandbox. No slash command, no cross-session filesystem.
+- **Claude Code:** `/vault` or `Skill(vault)`. Human-gated — `organize`/`audit` report or move files; they don't edit document content.
+- **claude.ai:** invoke `vault` by name; it works on the folder present in the sandbox. No slash command, no cross-session filesystem.
 
 ## Notes
 
-- The audit **reports**; it does not auto-edit artifacts. Fixing drift is the researcher's call (often a one-word wording change, sometimes a real correction). Offer to make specific fixes, but don't apply them unprompted.
-- Keep `show` and audit summaries tight — the vault can get large; surface signal, not dumps.
-- This skill is the natural place to answer "what's our sample size again?" / "which journal are we targeting?" / "what did we decide about exclusions?" without re-reading every document.
+- `organize` and `audit` are how the project stays clean over months. Run `organize` after dropping files into `00-inbox/`; run `audit` before submitting anything.
+- This is the place to answer "where's the methodology doc / what's our sample size / which journal / what did we decide about exclusions" without hunting through folders.
+- Keep summaries tight — surface signal, not dumps.

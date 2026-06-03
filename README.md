@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.11.1-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.11.2-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![CI](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml/badge.svg)](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
@@ -76,12 +76,20 @@ replication-designer  ← draws on a target paper; can seed a fresh cycle
 
 Two ways to use the network:
 
-- **Pipeline mode** — say `/research start a project on <topic>` and the conductor walks the whole lifecycle, invoking each skill in turn (Claude Code), reading and writing a shared `.research/` workspace, and **pausing at the steps only you can do** (collecting data, getting IRB approval, submitting). It resumes where you left off.
+- **Pipeline mode** — say `/research start a project on <topic>` and the conductor walks the whole lifecycle, invoking each skill in turn (Claude Code), reading and writing the project vault (a clean, templated `research/<project>/` folder), and **pausing at the steps only you can do** (collecting data, getting IRB approval, submitting). It resumes where you left off.
 - **Pairwise handoffs** — run any single skill; when it needs an upstream artifact or finishes with an obvious next step, it *offers* to chain to the relevant skill (Claude Code) or tells you which `/command` to run next (claude.ai). It never auto-runs another skill without your go-ahead.
 
-Skills coordinate through a small `.research/` workspace + `manifest.json` so they discover each other's outputs instead of making you re-supply paths. Workspace use is opt-in — run any skill standalone and it behaves exactly as before.
+Skills coordinate through **the project vault** — a clean, visible, templated folder (`research/<project>/`) where every skill files its output into a numbered lifecycle-stage subfolder (`01-ideation/`, `02-literature/`, … `10-dissemination/`), alongside a `knowledge/` folder and an auto-generated project `README.md`. No more hunting for where a file went; the project reads top-to-bottom like its own story. Vault use is opt-in — run any skill standalone and it behaves exactly as before.
 
-**The research vault** is the knowledge layer on top of that workspace. Beyond indexing files, it holds the project's *knowledge* — canonical facts (sample N, IRB#, pre-registration, target journal, language), one shared bibliography every skill cites from, the decisions log, consolidated open questions, the glossary, the voice profile, and entities (pseudonyms only — never PII). Each skill reads the vault at intake (so it never re-asks your sample size or re-fabricates a citation) and updates it at output. `/vault audit` scans every document against the vault to **catch drift before a reviewer does** — the abstract that says N=240 while the methods say 247, a citation that doesn't resolve, a term that's used three different ways. Full contract: [`docs/research-vault.md`](./docs/research-vault.md).
+```
+research/<project>/
+  README.md  manifest.json   knowledge/   00-inbox/
+  01-ideation/  02-literature/  03-methodology/  04-ethics/  05-instruments/
+  06-data/      07-analysis/    08-drafts/        09-review/  10-dissemination/
+  audits/   archive/
+```
+
+Beyond filing the documents, the vault holds the project's *knowledge*: canonical facts (sample N, IRB#, pre-registration, target journal, language), one shared bibliography every skill cites from, the decisions log, consolidated open questions, the glossary, the voice profile, and entities (pseudonyms only — never PII). Each skill reads the vault at intake (so it never re-asks your sample size or re-fabricates a citation) and updates it at output. `/vault audit` scans every document against the vault to **catch drift before a reviewer does** — the abstract that says N=240 while the methods say 247, a citation that doesn't resolve, a term used three ways, PII in the wrong file. `/vault organize` keeps the folder tidy. Full contract: [`docs/research-vault.md`](./docs/research-vault.md).
 
 Full network map, manifest schema, the human-gate rule, and the Claude Code ↔ claude.ai degradation table: [`docs/skill-network.md`](./docs/skill-network.md).
 

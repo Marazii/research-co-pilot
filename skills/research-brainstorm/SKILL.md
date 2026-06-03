@@ -173,7 +173,7 @@ Save the brainstorm to `brainstorm_<topic>.md`:
 
 ## Handoffs
 
-Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `research/<project>/` workspace + manifest contract, and the human-gate rule.
 
 **Lifecycle position:** Ideation — the usual entry point of a project.
 
@@ -193,4 +193,4 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - *Read at intake:* usually nothing (entry point), but check `facts` in case a project already exists.
 - *Write at output:* when the user picks a direction, seed initial `facts` (e.g., `target_topic`, working `language`) and add key terms to `glossary.md`. Register any "needs a literature check" items in `open-questions.md` for the lit-review stage.
 
-**Output to the workspace:** write `brainstorm_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `ideation`.
+**Output to the vault:** write `brainstorm_<topic>.md` into `research/<project>/01-ideation/`, register it in the manifest, set `stage` to `ideation`.
