@@ -237,4 +237,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** if the constructs aren't defined, offer to invoke `Skill(methodology-advisor)` first. On completion, offer `Skill(ethics-committee)` to audit the fielding protocol (ask before each).
 - **claude.ai:** advise "run /ethics on the survey protocol before fielding."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` and the methodology's constructs; `glossary.md`.
+- *Write at output:* add construct operationalizations + scale abbreviations to `glossary.md`; record instruments and variables in `entities.md` (non-PII); register any validated-scale sourcing as `[CITATION NEEDED]` resolved into `bibliography.md`.
+
 **Output to the workspace:** write `survey_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `instrument`.

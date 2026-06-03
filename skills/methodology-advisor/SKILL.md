@@ -311,4 +311,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** on completion, offer to invoke `Skill(ethics-committee)` for a pre-IRB audit (ask first). Offer `Skill(survey-design)` if an instrument is needed.
 - **claude.ai:** advise "run /ethics next for a pre-submission audit" rather than auto-chaining.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* the gap from `bibliography.md` / lit-review; existing `facts` and `glossary.md`.
+- *Write at output:* deposit the project's anchor **facts** — `sample_size` (recruited, with justification), `preregistration` link, `time_range`, target paradigm — each with provenance; append design decisions (e.g., "DiD over cross-sectional, because…") to `decisions.md`; add operationalizations to `glossary.md`.
+- *Flag-on-write:* if you'd set a fact that already exists with a different value, surface it rather than overwrite.
+
 **Output to the workspace:** write `methodology_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `design`.

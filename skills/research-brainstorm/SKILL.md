@@ -189,4 +189,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** once the user picks their top 1-3 questions, offer to invoke `Skill(literature-review)` to check novelty, then `Skill(methodology-advisor)` to design (ask before each).
 - **claude.ai:** advise "run /lit-review on your top question next to check it's not already settled."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* usually nothing (entry point), but check `facts` in case a project already exists.
+- *Write at output:* when the user picks a direction, seed initial `facts` (e.g., `target_topic`, working `language`) and add key terms to `glossary.md`. Register any "needs a literature check" items in `open-questions.md` for the lit-review stage.
+
 **Output to the workspace:** write `brainstorm_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `ideation`.

@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.11.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.11.1-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![CI](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml/badge.svg)](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
@@ -81,7 +81,9 @@ Two ways to use the network:
 
 Skills coordinate through a small `.research/` workspace + `manifest.json` so they discover each other's outputs instead of making you re-supply paths. Workspace use is opt-in — run any skill standalone and it behaves exactly as before.
 
-Full map, manifest schema, the human-gate rule, and the Claude Code ↔ claude.ai degradation table: [`docs/skill-network.md`](./docs/skill-network.md).
+**The research vault** is the knowledge layer on top of that workspace. Beyond indexing files, it holds the project's *knowledge* — canonical facts (sample N, IRB#, pre-registration, target journal, language), one shared bibliography every skill cites from, the decisions log, consolidated open questions, the glossary, the voice profile, and entities (pseudonyms only — never PII). Each skill reads the vault at intake (so it never re-asks your sample size or re-fabricates a citation) and updates it at output. `/vault audit` scans every document against the vault to **catch drift before a reviewer does** — the abstract that says N=240 while the methods say 247, a citation that doesn't resolve, a term that's used three different ways. Full contract: [`docs/research-vault.md`](./docs/research-vault.md).
+
+Full network map, manifest schema, the human-gate rule, and the Claude Code ↔ claude.ai degradation table: [`docs/skill-network.md`](./docs/skill-network.md).
 
 ---
 
@@ -282,7 +284,8 @@ research-co-pilot/
 │   ├── reviewer-response/
 │   ├── citation-formatter/
 │   ├── survey-design/
-│   └── peer-review/
+│   ├── peer-review/
+│   └── vault/                # the project's knowledge librarian (facts, bibliography, audit)
 │       └── (each skill has SKILL.md + README.md + optional reference files)
 ├── agents/                   # Subagents (Claude Code only)
 │   ├── source-finder.md      # parallel reading of many academic sources
@@ -294,9 +297,9 @@ research-co-pilot/
 │   ├── research.md           # /research — entry-point router
 │   └── (one per skill: /lit-review, /methodology, /ethics, /analyze,
 │        /code-themes, /brainstorm, /draft, /replicate, /grant, /talk,
-│        /respond, /cite, /survey, /peer-review)
+│        /respond, /cite, /survey, /peer-review, /vault)
 ├── examples/                 # Synthetic minimal example per skill
-├── docs/                     # philosophy, faq, screenshots, demo
+├── docs/                     # skill-network, research-vault, philosophy, faq, screenshots, demo
 ├── scripts/
 │   └── build-zips.sh         # rebuild dist/ after editing skills
 ├── CHANGELOG.md
@@ -326,6 +329,7 @@ research-co-pilot/
 | [`citation-formatter`](./skills/citation-formatter/README.md) | APA 7, MLA 9, Chicago (NB and AD), Harvard, Vancouver, IEEE, AMA, journal-specific. Verifies DOIs, handles edge cases (preprints, datasets, software, AI tools). Generates BibTeX/RIS. Document-wide consistency check. |
 | [`survey-design`](./skills/survey-design/README.md) | Question wording, scale choice, ordering effects, response burden. Recommends validated instruments rather than inventing new ones. Includes a pilot plan (cognitive interviews + quantitative pilot). Translation guidance. |
 | [`peer-review`](./skills/peer-review/README.md) | Multi-mode rigorous review: paper verdict, homework grading, committee panel, fact-check audit, plagiarism check, draft thinking-partner, presentation feedback, post-review iterate. **Returns a reviewed file with annotations anchored at the relevant locations** across `.docx` (inline comments + tracked changes), `.pdf` (sticky-note comments + highlights via PyMuPDF), `.pptx` (native PowerPoint comments on slides / shapes), `.tex` (`% REVIEWER:` line comments, optional `changes` package). |
+| [`vault`](./skills/vault/README.md) | The project's knowledge librarian (infrastructure, not a lifecycle stage). Manages the **research vault** — canonical facts (sample N, IRB#, pre-reg, journal, language), one shared bibliography, the decisions log, consolidated open questions, glossary, voice profile, and entities (pseudonyms only — never PII). `/vault audit` scans every document against the vault to catch cross-artifact drift (mismatched sample sizes, unresolved citations, term inconsistency, accidental PII). Files stay the source of truth; the vault is reconciled. |
 
 ### Subagents (Claude Code only — claude.ai has no equivalent)
 
@@ -339,7 +343,7 @@ research-co-pilot/
 
 ### Slash commands (Claude Code only)
 
-`/research` is the entry point if you're not sure which skill you need — it routes by description. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/draft`, `/grant`, `/replicate`, `/talk`, `/respond`, `/cite`, `/survey`, `/peer-review`.
+`/research` is the entry point if you're not sure which skill you need — it routes by description, or conducts the whole pipeline. The other commands invoke the matching skill directly: `/lit-review`, `/methodology`, `/ethics`, `/analyze`, `/code-themes`, `/brainstorm`, `/draft`, `/grant`, `/replicate`, `/talk`, `/respond`, `/cite`, `/survey`, `/peer-review`, and `/vault` (project knowledge + drift audit).
 
 ---
 

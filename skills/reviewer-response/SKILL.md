@@ -189,4 +189,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** delegate substantive prose revisions via `Skill(manuscript-drafter)`; run `Skill(citation-formatter)` on new citations; consult `Skill(ethics-committee)` for ethics-comment responses (ask before each).
 - **claude.ai:** keep the work in one conversation, loading the other skills' approaches inline as needed; or advise the user which skill to run next.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* the `decisions.md` log (so your responses cite the *actual* design/analysis rationale, not a reconstruction), the `facts` (so every number in the response matches the paper), and `bibliography.md` for any citations the revision adds.
+- *Write at output:* append revision decisions to `decisions.md`; record new facts (e.g., a re-run analysis's updated estimate, as a distinct fact); add new citations to `bibliography.md`; resolve the `[REVIEWER CONCERN UNADDRESSED]` / `[… NEEDED]` items you close.
+- *Flag-on-write:* if a revision changes a vault fact (a re-analysis moves N or an estimate), surface and record it rather than letting the response and the manuscript diverge.
+
 **Output to the workspace:** write the `response_to_reviewers_<round>/` package under `.research/`, register it in the manifest, advance `stage` to `revision`.

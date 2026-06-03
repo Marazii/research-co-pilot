@@ -6,6 +6,39 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.11.1] — 2026-06-03
+
+**Research vault.** The knowledge layer on top of the v0.11.0 `.research/` workspace. v0.11.0's `manifest.json` *indexes files*; the vault *holds project knowledge* — stated once, read by every skill, with cross-document drift caught automatically. No skill behavior weakened; the vault is opt-in (standalone runs are unchanged).
+
+### Added
+
+- **`docs/research-vault.md`** — the canonical vault spec: structure, the `facts` schema, the seven note formats, the read/update protocol, the flag-on-write rule, the six `/vault audit` checks, the **PII hard rule**, and portability. Sibling to `docs/skill-network.md`.
+- **New `vault` skill + `/vault` command** (the project's librarian — infrastructure, not a lifecycle stage). Subcommands: `show` (vault summary), `init` (scaffold the vault), `audit` (the marquee feature — scan every artifact against the vault and report drift), `add` (deposit a fact/decision/citation/question/term/entity), `resolve` (close an open question). Includes `skills/vault/README.md`.
+- **The vault itself** — `.research/vault/` with seven markdown notes (`facts.md`, `bibliography.md`, `decisions.md`, `open-questions.md`, `glossary.md`, `voice-profile.md`, `entities.md`) plus a structured `facts` block + `vault` registry in `manifest.json`. Markdown-first hybrid: human-readable notes + typed facts the audit diffs against.
+- **`/vault audit` — drift detection.** Six checks with 🔴/🟡/🟢 severity: fact consistency (the abstract-says-240-but-methods-say-247 class), citation consistency (every cite resolves to the canonical bibliography; no unresolved `[… NEEDED]` at pre-submission), terminology drift vs the glossary, unresolved open questions, staleness, and **PII safety** (scans for accidental real-name PII and flags it).
+- **Canonical bibliography.** `bibliography.md` is now the single source of truth for citations: `literature-review` seeds it, `manuscript-drafter` / `grant-writer` / `reviewer-response` cite *by cite-key*, and `citation-formatter` renders any style *from it* rather than a parallel list — killing citation drift and re-fabrication.
+- **Reusable voice profile.** `manuscript-drafter` writes `voice-profile.md` once; `talk-builder`, `grant-writer`, and `reviewer-response` now read it so everything sounds like the same author.
+
+### Changed
+
+- All 14 existing skills gained a **`Vault`** block in their `## Handoffs` section — what each reads from the vault at intake and updates at output, plus per-skill flag-on-write rules. Highlights: `data-analysis` records the post-exclusion N as a *distinct* fact (never overwriting the recruited N) and stops if a number would contradict the vault without explanation; `methodology-advisor` / `ethics-committee` deposit the anchor facts (sample size, pre-reg, IRB#); `qualitative-coding` deposits participant *pseudonyms only* (real-name key stays off-system).
+- **`docs/skill-network.md`** — manifest schema gains the `facts` + `vault` blocks; the intake/output protocol gains "read the vault / update the vault" with the flag-on-write rule.
+- **`/research` conductor** — initializes the vault at project start, runs a **`/vault audit` gate before the pre-submission stage** (catch drift before the paper goes out), and reads key facts + vault counts into the pipeline status report. `/vault` added to the router menu + routing keywords.
+- README — new "research vault" paragraph in "How the skills work together", a `vault` row in the skills table, and the vault in the file tree.
+
+### Design rules (held throughout)
+
+- **The vault never holds PII.** Pseudonyms + non-identifying attributes only; the real-name key stays off-system; `/vault audit` actively scans for accidental PII.
+- **Files are the source of truth; the vault is reconciled** at intake and by the audit — it never invents an artifact's contents.
+- **Distinct facts, not overwrites.** Legitimately-different-but-related values (recruited N vs analyzed N) are kept as separate keys with notes; only genuine contradictions are flagged.
+- **Opt-in.** No `.research/`? Every skill runs standalone exactly as before.
+
+### Notes for upgraders
+
+- Nothing breaks. The vault engages only when you start one (via `/vault init`, `/research` pipeline mode, or accepting a skill's offer).
+- claude.ai: the vault is markdown notes in the sandbox; invoke the `vault` skill by name (no slash command), and re-upload the vault notes across sessions.
+- The plugin now has **15 skills** (added `vault`), 5 subagents, 16 slash commands.
+
 ## [0.11.0] — 2026-05-15
 
 **Skill network.** Turns the 14 skills from loosely-coupled islands into an orchestrated network: *skills are nodes, shared artifacts are edges, `/research` is the conductor.* No skill behavior was weakened; this release adds the connective tissue. Workspace use and cross-skill chaining are opt-in — every skill still runs standalone exactly as in v0.10.0.
@@ -286,7 +319,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.1...HEAD
+[0.11.1]: https://github.com/Marazii/research-co-pilot/compare/v0.11.0...v0.11.1
 [0.11.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0-rc.1...v0.10.0
 [0.10.0-rc.1]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...v0.10.0-rc.1

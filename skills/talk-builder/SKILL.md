@@ -337,4 +337,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** on completion, offer to invoke `Skill(peer-review)` in presentation mode to pressure-test the deck before the talk (ask first).
 - **claude.ai:** advise "run /peer-review on the slides for a pre-conference critique."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `voice-profile.md` (the talk's framing should echo the paper's voice), `facts` (every number on a slide must match the paper), and `bibliography.md` for any cited work.
+- *Write at output:* light — register any "need a better figure / number to confirm" items in `open-questions.md`.
+- *Flag-on-write:* a statistic on a slide that conflicts with a vault fact → surface it; the talk must not state a different N or effect size than the manuscript.
+
 **Output to the workspace:** write `talk_<short_title>_<minutes>min.md` (+ optional Marp/Quarto/reveal.js/Beamer stub) under `.research/`, register it in the manifest, set `stage` to `dissemination`.

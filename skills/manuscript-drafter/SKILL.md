@@ -396,4 +396,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** offer to invoke `Skill(methodology-advisor)` / `Skill(data-analysis)` / `Skill(qualitative-coding)` first — ask before chaining; never auto-run.
 - **claude.ai:** tell the user "run /methodology (or /analyze, /code-themes) first, then return" — or proceed inline if they supply the inputs in chat.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` (sample size, target journal, language — do **not** re-ask); cite from the canonical `bibliography.md` **by cite-key**, never re-fabricate; apply `voice-profile.md`; use `glossary.md` terms.
+- *Write at output:* **write `voice-profile.md` once** (your Phase 3 profile, so talk/grant/response reuse it); append content-cut and framing decisions to `decisions.md`; register every `[CITATION NEEDED]` / `[LITERATURE NEEDED]` in `open-questions.md`; add any new verified citation to `bibliography.md`.
+- *Flag-on-write:* any number you'd state (N, effect size) that conflicts with a vault fact → stop and surface it before writing.
+
 **Output to the workspace:** write `manuscript_<section>_<topic>.md` under `.research/`, register it in the manifest, and advance `stage` to `drafting`.

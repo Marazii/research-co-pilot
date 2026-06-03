@@ -82,6 +82,33 @@ The filenames are exactly the ones each skill already produces (see each skill's
 - `status` per artifact: `draft` or `final`.
 - `language` lets downstream skills (especially manuscript-drafter) match the project's language without re-detecting.
 
+### The knowledge layer: `facts` + `vault` (the research vault)
+
+The manifest is the **file index**. On top of it sits the **research vault** — the project's knowledge layer (canonical facts, one bibliography, the decisions log, open questions, glossary, voice profile, entities). The manifest gains two additive blocks:
+
+```json
+{
+  "...": "...base fields above...",
+  "facts": {
+    "sample_size":          {"value": 247, "source": "methodology-advisor", "status": "final"},
+    "sample_size_analyzed": {"value": 240, "source": "data-analysis", "status": "final", "note": "after 7 attention-check exclusions"},
+    "irb_number":           {"value": "IRB-2026-0142", "source": "ethics-committee", "status": "final"},
+    "preregistration":      {"value": "https://osf.io/xyz", "source": "methodology-advisor"},
+    "target_journal":       {"value": "J. Hypothetical Studies"}
+  },
+  "vault": {
+    "bibliography":  ".research/vault/bibliography.md",
+    "decisions":     ".research/vault/decisions.md",
+    "open_questions":".research/vault/open-questions.md",
+    "glossary":      ".research/vault/glossary.md",
+    "voice_profile": ".research/vault/voice-profile.md",
+    "entities":      ".research/vault/entities.md"
+  }
+}
+```
+
+Each fact carries **provenance** (`source`) and `status`, so drift-checking can diff facts against artifacts and attribute contradictions. The vault keeps legitimately-distinct facts (recruited N vs analyzed N) as separate keys with notes — never a silent overwrite. **The vault never holds PII** (pseudonyms only). Full contract — note formats, the read/update protocol, flag-on-write, and the `/vault audit` checks — is in [`docs/research-vault.md`](./research-vault.md).
+
 ### Two hard rules for the workspace
 
 1. **Files are the source of truth; the manifest is advisory.** At intake, a skill reconciles the manifest against the actual files. If the manifest lists a file that does not exist, trust the filesystem and correct the manifest — never hallucinate the missing artifact's contents.
@@ -95,15 +122,19 @@ The filenames are exactly the ones each skill already produces (see each skill's
 
 1. Check for `.research/manifest.json`.
 2. If present, read it to discover the upstream artifacts this skill needs (see the skill's Upstream list) — instead of asking the user for paths.
-3. Reconcile against the filesystem (rule 1 above).
-4. If a needed upstream artifact is missing, follow the Chaining protocol below.
+3. **Read the vault.** Use `facts` (don't re-ask for sample size, journal, IRB#, language); cite from the canonical `bibliography.md` by key; use `glossary.md` terms; apply `voice-profile.md` where you write prose; consult `entities.md` and open `open-questions.md`.
+4. Reconcile against the filesystem (rule 1 above).
+5. If a needed upstream artifact is missing, follow the Chaining protocol below.
 
 ### At output
 
 1. Write the primary deliverable to `.research/<conventional-filename>`.
 2. Register or update its entry in the manifest (`skill`, `file`, `status`).
-3. Advance `stage` if this skill completes a lifecycle stage.
-4. Surface the natural next step(s) from the skill's Downstream list.
+3. **Update the vault.** Deposit new facts (with provenance); append decisions with rationale; add verified citations to `bibliography.md`; register/resolve `[… NEEDED]` markers in `open-questions.md`; update `glossary.md`. **Flag-on-write:** before writing a fact or citation that *conflicts* with the vault, stop and surface it (it's usually a distinct fact, occasionally a correction) — never silently overwrite.
+4. Advance `stage` if this skill completes a lifecycle stage.
+5. Surface the natural next step(s) from the skill's Downstream list.
+
+Full detail (note formats, the six `/vault audit` checks, the PII hard rule): [`docs/research-vault.md`](./research-vault.md).
 
 ---
 

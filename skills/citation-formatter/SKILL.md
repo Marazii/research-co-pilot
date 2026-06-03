@@ -262,4 +262,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** typically invoked *by* manuscript-drafter, reviewer-response, or grant-writer rather than the reverse. When run standalone on a manuscript, offer to invoke `Skill(peer-review)` next (ask first).
 - **claude.ai:** advise the user on the next step rather than auto-chaining.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* the canonical `bibliography.md` — **this is your input**, not a parallel list. Render the requested style *from it*; don't build a separate reference list that can drift.
+- *Write at output:* mark entries `Verified` once you've confirmed DOI/metadata; fold any new sources back into `bibliography.md` with cite-keys; resolve the matching `[CITATION NEEDED]` items in `open-questions.md`.
+
 **Output to the workspace:** write `references.md` (or edit the manuscript in place) under `.research/`, register it in the manifest.

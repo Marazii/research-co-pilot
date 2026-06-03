@@ -244,4 +244,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** if no analysis plan exists, offer to invoke `Skill(methodology-advisor)` first (ask before chaining). For heavy compute, spawn the `data-cruncher` subagent. For an independent check, spawn `stats-validator`.
 - **claude.ai:** advise "run /methodology first" if the design is unsettled; run heavy work inline in the analysis sandbox.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` — especially the recruited `sample_size` — and the analysis plan.
+- *Write at output:* record the **analyzed N as a distinct fact** (`sample_size_analyzed`, with a note on exclusions) — do not overwrite the recruited N; append every cleaning / exclusion / model-choice decision to `decisions.md` with rationale (the reproducibility spine the methods + reviewer-response draw from).
+- *Flag-on-write:* if your analyzed N differs from the vault's `sample_size` and there is no exclusion note explaining it, **stop and ask** whether it's a post-exclusion N (distinct fact) or a discrepancy — never silently emit a contradicting number.
+
 **Output to the workspace:** write `analysis_<topic>.md` (+ the reproducible script) under `.research/`, register it in the manifest, advance `stage` to `analysis`.

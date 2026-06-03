@@ -185,4 +185,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** for many sources, spawn the `source-finder` subagent (parallel reading). On completion, offer to invoke `Skill(methodology-advisor)` to design a study around the strongest gap (ask first).
 - **claude.ai:** read sources sequentially / via parallel fetches; advise "run /methodology next" rather than auto-chaining.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* existing `bibliography.md` (don't duplicate sources already verified) and `glossary.md`.
+- *Write at output:* **seed the canonical `bibliography.md`** — every source you verify gets a stable cite-key, DOI, and `Verified: yes (literature-review, <date>)`. This is the single source of truth all downstream skills cite from. Register any `[CITATION NEEDED]` / `[LITERATURE NEEDED]` in `open-questions.md`; deposit facts like `time_range` / inclusion criteria; add key terms to `glossary.md`.
+
 **Output to the workspace:** write `lit_review_<topic>.md` under `.research/`, register it in the manifest, advance `stage` to `review`.

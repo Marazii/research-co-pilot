@@ -312,4 +312,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** typically invoked *by* methodology-advisor or replication-designer. On completion with required revisions, offer to invoke `Skill(methodology-advisor)` to adjust the design (ask first).
 - **claude.ai:** advise "revise the design (/methodology) per the required revisions, then re-run /ethics."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` (sample size, population) and the methodology.
+- *Write at output:* once approval details exist, deposit the `irb_number` fact (+ consent/data-plan facts) with provenance; append ethics-relevant decisions to `decisions.md`.
+- *PII reminder:* the vault never holds participant identifiers. Real names → the off-system key (as qualitative-coding requires); `entities.md` holds pseudonyms only. If the protocol's data plan would put identifiers anywhere in `.research/`, flag it.
+
 **Output to the workspace:** write `ethics_review_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `ethics`. Reminder: this is a self-audit, not institutional approval.

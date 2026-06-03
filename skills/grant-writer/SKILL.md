@@ -212,4 +212,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** if aims or design are missing, offer to invoke `Skill(research-brainstorm)` / `Skill(methodology-advisor)` first (ask). After drafting, offer `Skill(citation-formatter)`.
 - **claude.ai:** advise the prerequisite skill to run first rather than auto-chaining.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` (sample size, preregistration, funding), the canonical `bibliography.md` (cite by key — Significance draws on the same verified sources as the paper), and `voice-profile.md` (so the proposal reads in the PI's voice).
+- *Write at output:* deposit the `funding` fact (funder + mechanism) once known; register `[PRELIMINARY DATA NEEDED]` / `[CITATION NEEDED]` items in `open-questions.md`; append framing decisions to `decisions.md`.
+
 **Output to the workspace:** write `grant_<funder>_<section>.md` under `.research/`, register it in the manifest.

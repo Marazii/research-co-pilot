@@ -1196,4 +1196,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** after the review, offer to invoke `Skill(manuscript-drafter)` to action the major issues, or `Skill(reviewer-response)` if the user is responding to a journal's reviewers (ask first). The `Skill` tool is available under baseline permissions; this skill deliberately keeps `allowed-tools` unset so it retains full document-annotation tooling.
 - **claude.ai:** advise the next step ("run /draft to revise" or "run /respond for the R&R") rather than auto-chaining.
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* the `facts` and canonical `bibliography.md` so you can check the manuscript's numbers and citations against the project's own knowledge — drift you find (the abstract's N disagreeing with the methods) is a real review finding.
+- *Write at output:* register substantive issues you raise as items in `open-questions.md` so they're tracked to resolution.
+- *Complements `/vault audit`:* peer-review audits the **paper**; `Skill(vault)` audit checks consistency across **all** project documents. Offer to run the vault audit too before submission.
+
 **Output to the workspace:** the structured review plus the annotated source file (`*_REVIEWED.*`). When part of a project, save under `.research/` and register in the manifest; advance `stage` to `pre-submission`.

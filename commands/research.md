@@ -38,10 +38,12 @@ What part of your research can I help with?
 🎤  /talk             — Turn a paper into a conference talk (outline + slides + notes)
 💰  /grant            — Draft grant-proposal sections (NSF, NIH, ERC, Wellcome, etc.)
 🔁  /replicate        — Design a replication of an existing study
+📚  /vault            — Project knowledge: facts, bibliography, decisions; audit for drift
 
 🔗  Run the whole pipeline: say "start a project on <topic>" and I'll conduct the
     lifecycle end to end (brainstorm → review → design → ethics → data → analysis →
-    draft → peer review), pausing at the steps only you can do.
+    draft → peer review), pausing at the steps only you can do. Project knowledge
+    accumulates in a shared vault as you go (/vault to see it, /vault audit to check it).
 
 Or just describe what you need (e.g., "I have 12 interview transcripts and want themes",
 "help me decide between RCT and quasi-experiment", "fix the references in my draft").
@@ -64,6 +66,7 @@ If the user's input contains:
 - "turn paper into talk", "presentation outline", "slides for my talk", "conference talk", "lecture outline", "academic presentation", "speaker notes", "thesis defense talk", "job talk", "keynote", "invited talk", "lightning talk", "elevator pitch of my paper" → invoke `talk-builder`.
 - "grant", "specific aims", "NSF", "NIH", "ERC", "Wellcome", "Horizon Europe", "fellowship application", "broader impacts", "lay summary", "biosketch" → invoke `grant-writer`.
 - "replicate", "replication", "registered replication", "many-labs", "is this finding robust" → invoke `replication-designer`.
+- "vault", "project knowledge", "project facts", "audit my project", "check for inconsistencies", "is my sample size consistent", "what's in the vault", "consistency check across my documents", "canonical bibliography" → invoke `vault`.
 
 If multiple skills apply, pick the most direct one and mention the others. If none clearly match, ask one clarifying question, then route.
 
@@ -84,8 +87,8 @@ grant-writer runs in parallel whenever funding is in play.
 ### Step 1 — Read or create the workspace
 
 - Look for `.research/manifest.json`.
-  - **Present:** read it. Reconcile against the actual files in `.research/` (files are source of truth; correct the manifest if it lists missing files). Report the current `stage` and what artifacts already exist.
-  - **Absent:** ask the user for a short project name and the working language, then create `.research/manifest.json` with empty `artifacts`, `stage: "ideation"`, and the language. (Claude Code: write the file. claude.ai: keep the manifest in the conversation / sandbox and tell the user to save it.)
+  - **Present:** read it. Reconcile against the actual files in `.research/` (files are source of truth; correct the manifest if it lists missing files). Read the **vault** (`facts` block + `.research/vault/*`) so you know the project's knowledge. Report the current `stage`, the key `facts`, and what artifacts already exist.
+  - **Absent:** ask the user for a short project name and the working language, then **initialize the workspace and the vault** — invoke `Skill(vault)` with `init` (or, on claude.ai, create the manifest + `.research/vault/` notes inline). This scaffolds `manifest.json` (with empty `facts`/`vault` blocks, `stage: "ideation"`, the language) and the seven vault notes.
 
 ### Step 2 — Resume or start
 
@@ -105,6 +108,7 @@ For each stage, in order:
 5. **Stop at human gates** — do not proceed past these without the user:
    - **Ethics gate:** after `ethics-committee`, before data collection. Surface required revisions; wait.
    - **Data-collection gate:** the pipeline cannot collect data. Pause, tell the user what data the design calls for, and wait until they confirm data exists (a path in `.research/`).
+   - **Vault-audit gate:** before the `pre-submission` / `peer-review` stage, run `Skill(vault)` with `audit` to catch cross-document drift (sample size / citations / terminology / unresolved markers / PII) before the paper goes out. Surface 🔴 blockers and let the user resolve them first. Offer, don't force.
    - **Submission / R&R gate:** after `peer-review` + revisions, the user submits externally. Pause until reviewer comments come back, then resume at `reviewer-response`.
 
 ### The one rule that never bends
@@ -132,7 +136,11 @@ Whenever the user re-enters pipeline mode or asks "where are we", print a compac
 Project: <name>   Language: <lang>   Stage: <current stage>
 Done:     brainstorm ✓  lit-review ✓  methodology ✓
 Next:     ethics-committee (then: data collection — your turn)
+Key facts: sample_size 247 · target_journal J. Hypothetical Studies · IRB IRB-…0142
 Artifacts in .research/: brainstorm_<topic>.md, lit_review_<topic>.md, methodology_<study>.md
+Vault: 18 sources · 3 open questions · 11 decisions   (run /vault for detail, /vault audit to check drift)
 ```
+
+Read the `facts` and vault counts from the manifest + `.research/vault/*` for this report.
 
 Then ask whether to continue from the next stage.

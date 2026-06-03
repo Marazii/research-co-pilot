@@ -293,4 +293,9 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** for a large corpus, spawn the `transcript-coder` subagent (bulk clean + code). On completion, offer to invoke `Skill(manuscript-drafter)` to write up the Findings (ask first).
 - **claude.ai:** process transcripts inline in the analysis sandbox; advise "run /draft next for the Findings section."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `facts` (sample size) and the methodology's qualitative tradition.
+- *Write at output:* deposit participants into `entities.md` as **pseudonyms + non-identifying attributes only** (e.g., "P03 — ICU nurse, 8 yrs"); add codes/themes/operationalizations to `glossary.md`.
+- *PII hard rule:* the real-name → pseudonym key stays **off-system**, exactly as Phase 2 requires — it is never written into `entities.md` or anywhere in `.research/`. The vault holds pseudonyms only.
+
 **Output to the workspace:** write the codebook + themes report (+ anonymization key kept separate) under `.research/`, register in the manifest, advance `stage` to `analysis`.

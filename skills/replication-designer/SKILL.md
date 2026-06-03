@@ -244,4 +244,8 @@ Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../..
 - **Claude Code:** on completion, offer to invoke `Skill(ethics-committee)` for the replication's protocol audit and `Skill(methodology-advisor)` to flesh out the design (ask first).
 - **claude.ai:** advise "run /ethics on the replication protocol next."
 
+**Vault** (see [`docs/research-vault.md`](../../docs/research-vault.md)):
+- *Read at intake:* `bibliography.md` (the target paper + related work) and `facts`.
+- *Write at output:* deposit replication `facts` — target effect size, the power-based replication `sample_size`, the `preregistration` link — with provenance; append every deviation-from-original decision to `decisions.md` with rationale; add the original to `bibliography.md` with a cite-key; register open questions (materials availability, original-author contact).
+
 **Output to the workspace:** write `replication_design_<short_title>.md` under `.research/`, register it in the manifest, set `stage` to `design`.
