@@ -15,6 +15,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Survey Design — Rigorous Instruments, Not Just Question Lists
@@ -217,3 +218,23 @@ Produce `survey_<topic>.md`:
 - A 10-question survey that 1000 people complete > a 50-question survey that 200 people complete.
 - If it can be measured passively (logs, admin data), don't ask. Self-report is expensive and noisy.
 - Run a draft past someone in the target population *before* spending money on a panel.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Instrument — after study design, before data collection.
+
+**Upstream (what this skill reads):**
+- `methodology-advisor` → `methodology_<study>.md` — the constructs to measure and the sampling plan.
+- *At intake, check `.research/manifest.json` for the methodology before asking what to measure.*
+
+**Downstream (what this skill feeds):**
+- `data-analysis` — once the survey is fielded, the analysis plan picks up the responses.
+- `ethics-committee` — the protocol that fields the instrument needs an audit.
+
+**Chaining:**
+- **Claude Code:** if the constructs aren't defined, offer to invoke `Skill(methodology-advisor)` first. On completion, offer `Skill(ethics-committee)` to audit the fielding protocol (ask before each).
+- **claude.ai:** advise "run /ethics on the survey protocol before fielding."
+
+**Output to the workspace:** write `survey_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `instrument`.

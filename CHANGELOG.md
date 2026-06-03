@@ -6,6 +6,40 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-05-15
+
+**Skill network.** Turns the 14 skills from loosely-coupled islands into an orchestrated network: *skills are nodes, shared artifacts are edges, `/research` is the conductor.* No skill behavior was weakened; this release adds the connective tissue. Workspace use and cross-skill chaining are opt-in — every skill still runs standalone exactly as in v0.10.0.
+
+### Added
+
+- **`docs/skill-network.md`** — the canonical contract for the network: the research-lifecycle DAG, the `.research/` workspace + `manifest.json` schema, the cross-skill invocation protocol, the mandatory human-gate rule, and the full Claude Code ↔ claude.ai degradation table. Every SKILL.md links here.
+- **`## Handoffs` section in all 14 SKILL.md files** — a standardized contract replacing the old ad-hoc "composes well with" / "defer to X" prose. Each lists: lifecycle position, **Upstream** (what it reads + the producing skill + the artifact filename), **Downstream** (what it feeds), a **Chaining** block with explicit Claude Code vs claude.ai behavior, and its workspace output convention.
+- **Shared `.research/` workspace convention** — skills write their deliverables to predictable paths and register them in `.research/manifest.json`, so downstream skills discover upstream outputs instead of making the user re-supply paths. Files are the source of truth; the manifest is advisory and reconciled at intake.
+- **Active cross-skill invocation (Claude Code)** — `Skill` added to `allowed-tools` for the 13 skills that chain (peer-review left unrestricted so it keeps full annotation tooling). Skills can now invoke each other via the `Skill` tool — always behind an explicit human gate.
+- **`/research` pipeline mode** — `commands/research.md` is now a router **and** a conductor. "start a project on X" walks the whole lifecycle (brainstorm → review → design → ethics → data → analysis → draft → peer-review → reviewer-response), reads/writes the manifest, pauses at human gates (data collection, IRB, submission/R&R), skips stages whose artifacts already exist, and resumes from the manifest `stage` on re-entry. Router mode (single request → one skill) is unchanged.
+- **"How the skills work together"** section in the top-level README with the lifecycle DAG; a network pointer added to every per-skill README's "Composes well with" section.
+
+### Changed
+
+- `reviewer-response` SKILL.md: its bespoke `## Composition` section replaced by the standardized `## Handoffs` format.
+- The 14 per-skill READMEs now point to `docs/skill-network.md` and frame "Composes well with" as the human-readable view of each skill's `## Handoffs`.
+
+### Design rules (encoded throughout)
+
+- **Human gate on every cross-skill invocation.** A skill *offers* to chain; the user confirms. No skill auto-runs another, and the conductor never advances past a human gate without a go-ahead. ("Co-pilot, not assistant.")
+- **Both surfaces, one SKILL.md.** Every chaining instruction has a Claude Code branch (Skill tool / subagents) and a claude.ai branch (advisory "run /X next" / inline). No skill descriptions changed (char-limit safe).
+
+### Notes for upgraders
+
+- Nothing breaks. Run any single skill exactly as before; the workspace and chaining only engage when you opt in (via `/research` pipeline mode or by accepting a chaining offer).
+- claude.ai users: the network degrades to advisory prose — skills tell you which skill to run next rather than auto-invoking, since claude.ai has no Skill tool, subagents, or cross-session filesystem.
+- This is the first tag to exercise the `update-citation-doi.yml` workflow end to end (Zenodo integration was toggled on after v0.10.0).
+
+### Deferred
+
+- The `grant-writer` F1–F6 rigor overhaul (mirroring manuscript-drafter v0.8.0) — still parked for a later release.
+- Visibility assets (screenshots / demo GIF / social-preview) — still deferred from v0.10.0.
+
 ## [0.10.0] — 2026-05-14
 
 **General availability.** Promotes `v0.10.0-rc.1` to stable. Adds the remaining seven example folders, ships the CITATION.cff DOI auto-update workflow, and mints the Zenodo DOI on this tag.
@@ -252,7 +286,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/Marazii/research-co-pilot/compare/v0.10.0-rc.1...v0.10.0
 [0.10.0-rc.1]: https://github.com/Marazii/research-co-pilot/compare/v0.8.0...v0.10.0-rc.1
 [0.8.0]: https://github.com/Marazii/research-co-pilot/compare/v0.7.0...v0.8.0

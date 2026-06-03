@@ -42,6 +42,8 @@ See [`examples/citation-formatter/`](../../examples/citation-formatter/) for a w
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`manuscript-drafter`** — manuscript-drafter produces drafts with `[CITATION NEEDED]` markers; citation-formatter cleans the bibliography after you fill them in.
 - **`literature-review`** — lit-review's source list becomes the starter bibliography for citation-formatter.
 - **`grant-writer`** — grant-writer often needs funder-specific citation styles; citation-formatter handles the conversion.

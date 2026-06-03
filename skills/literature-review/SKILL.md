@@ -19,6 +19,7 @@ allowed-tools:
   - Agent
   - TodoWrite
   - AskUserQuestion
+  - Skill
 ---
 
 # Literature Review — Rigorous, Fact-Checked, Source-Grounded
@@ -162,3 +163,26 @@ If the user provided files (PDFs, BibTeX, Zotero exports, etc.):
 - Always read them before searching the web. They define the scope.
 - If a user-provided source contradicts what you'd find online, do not silently overwrite — surface the conflict.
 - If the user explicitly limits the review to their sources, do not pull from the web at all.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Review — after a question is chosen, before study design.
+
+**Upstream (what this skill reads):**
+- `research-brainstorm` → `brainstorm_<topic>.md` — the chosen, sharpened research question.
+- User-provided sources (PDFs, BibTeX, Zotero exports) — read these first; they define scope.
+- *At intake, check `.research/manifest.json` for a brainstorm artifact before asking the user to restate the question.*
+
+**Downstream (what this skill feeds):**
+- `methodology-advisor` — the "Gaps and open questions" section becomes the design's target.
+- `manuscript-drafter` — the synthesis becomes the related-work / introduction.
+- `grant-writer` — the gap analysis + key citations become Significance.
+- `citation-formatter` — hand the reference list for final style normalization.
+
+**Chaining:**
+- **Claude Code:** for many sources, spawn the `source-finder` subagent (parallel reading). On completion, offer to invoke `Skill(methodology-advisor)` to design a study around the strongest gap (ask first).
+- **claude.ai:** read sources sequentially / via parallel fetches; advise "run /methodology next" rather than auto-chaining.
+
+**Output to the workspace:** write `lit_review_<topic>.md` under `.research/`, register it in the manifest, advance `stage` to `review`.

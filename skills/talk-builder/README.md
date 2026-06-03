@@ -46,6 +46,8 @@ See [`examples/talk-builder/`](../../examples/talk-builder/) for a worked sample
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`manuscript-drafter`** — The paper is usually the input; both skills should reference the same take-home message.
 - **`peer-review`** in `--presentation` mode — submit your drafted slides to peer-review for a pre-conference critique.
 - **`literature-review`** — For invited talks and keynotes that need to frame your work in the field's broader narrative, lit-review identifies the through-line.

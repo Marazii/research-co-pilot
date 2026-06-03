@@ -44,6 +44,8 @@ See [`examples/literature-review/`](../../examples/literature-review/) for the f
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`methodology-advisor`** — A good lit review identifies the gap; methodology-advisor designs the study that closes it. Feed the lit-review output into methodology-advisor as input.
 - **`manuscript-drafter`** — The lit-review output becomes the related-work / introduction draft. Manuscript-drafter pulls forward the synthesis and cites only from the verified bibliography.
 - **`source-finder` subagent** — For reviews with many candidate sources (more than ~5-10), the parent skill spawns the source-finder subagent to read in parallel and return structured digests.

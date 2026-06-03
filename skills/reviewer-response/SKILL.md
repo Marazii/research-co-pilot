@@ -24,6 +24,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Reviewer Response — Point-by-Point, Polite, Honest
@@ -168,9 +169,24 @@ Report self-audit results to the user along with the package, especially noting 
 - **Reviewer cross-fire** (R1 wants X, R2 wants the opposite of X): name it explicitly. "Reviewer 1 (Comment 3) suggested X while Reviewer 2 (Comment 5) suggested the opposite. We have implemented a middle approach, Z, that we believe addresses the core concerns of both: [reasoning]."
 - **For preprint-then-journal workflows:** the response document is also useful evidence in the preprint's revision history, even if the journal doesn't require it.
 
-## Composition
+## Handoffs
 
-- **`peer-review`** — If the reviewer comments were produced by another use of `peer-review` (a colleague gave you feedback before submission), feed that output directly as input here. The categorization in Phase 2 maps cleanly.
-- **`manuscript-drafter`** — For any revision longer than a paragraph, delegate to `manuscript-drafter` (or the same-named subagent) so the new prose extracts and preserves the existing manuscript's voice profile.
-- **`citation-formatter`** — If revisions add new citations, run the bibliography through `citation-formatter` after.
-- **`ethics-committee`** — If reviewer comments ask for ethics-section clarifications (consent, IRB, vulnerable populations), pull the structured response from `ethics-committee` to draft the revised text.
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Revision — after an R&R decision, before resubmission.
+
+**Upstream (what this skill reads):**
+- `peer-review` → review output — if the comments came from a `peer-review` run (e.g., a colleague's pre-submission feedback), feed it directly; the Phase 2 categorization maps cleanly. Or the journal's actual reviewer letter.
+- `manuscript-drafter` → the submitted manuscript being revised.
+- *At intake, check `.research/manifest.json` for the manuscript and any prior review/response before asking for paths.*
+
+**Downstream (what this skill feeds):**
+- `manuscript-drafter` — for any revision longer than a paragraph, delegate so the new prose preserves the manuscript's voice profile.
+- `citation-formatter` — if revisions add new citations, normalize the bibliography after.
+- `ethics-committee` — if reviewers ask for ethics-section clarifications, pull the structured response from there to draft the revised text.
+
+**Chaining:**
+- **Claude Code:** delegate substantive prose revisions via `Skill(manuscript-drafter)`; run `Skill(citation-formatter)` on new citations; consult `Skill(ethics-committee)` for ethics-comment responses (ask before each).
+- **claude.ai:** keep the work in one conversation, loading the other skills' approaches inline as needed; or advise the user which skill to run next.
+
+**Output to the workspace:** write the `response_to_reviewers_<round>/` package under `.research/`, register it in the manifest, advance `stage` to `revision`.

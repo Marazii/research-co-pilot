@@ -44,6 +44,8 @@ See [`examples/survey-design/`](../../examples/survey-design/) for a worked samp
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`methodology-advisor`** — Survey-design produces the instrument; methodology-advisor specifies the study design that fields it.
 - **`ethics-committee`** — Ethics-committee audits the protocol that uses the survey.
 - **`data-analysis`** — Once data is collected, data-analysis runs the analysis-plan-preview specified here.

@@ -1175,3 +1175,25 @@ If the user has not yet built the slides and is in early prep, redirect to the `
 - **Pure-image / figure-only slides:** OCR is out of scope. Review the speaker notes and slide titles, ask the user to describe what each image shows if the figure carries the slide, and explicitly flag that visual content was not directly evaluated.
 - **Presentation without slides yet (pure outline or speaker-notes-only):** redirect to the `talk-builder` skill, which builds slides from scratch. Presentation mode reviews what's drafted.
 - **Custom persona overlay** (e.g., "review this as Prof. Y"): honor the persona while keeping the structural rigor of the skill intact.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Pre-submission audit — after drafting, before submission. (Also reviews homework, talks, and standalone documents.)
+
+**Upstream (what this skill reads):**
+- `manuscript-drafter` → `manuscript_<section>_<topic>.md` — the draft to audit before submission.
+- `talk-builder` → a drafted deck, when run in presentation mode.
+- Standalone: any document the user supplies (`.docx` / `.pdf` / `.pptx` / `.tex`).
+- *At intake, check `.research/manifest.json` for a current draft before asking for a path.*
+
+**Downstream (what this skill feeds):**
+- `reviewer-response` — when real reviewer comments arrive, this skill's structured issue categories map directly to the R&R intake.
+- `manuscript-drafter` — hand the major issues back for a revision pass.
+
+**Chaining:**
+- **Claude Code:** after the review, offer to invoke `Skill(manuscript-drafter)` to action the major issues, or `Skill(reviewer-response)` if the user is responding to a journal's reviewers (ask first). The `Skill` tool is available under baseline permissions; this skill deliberately keeps `allowed-tools` unset so it retains full document-annotation tooling.
+- **claude.ai:** advise the next step ("run /draft to revise" or "run /respond for the R&R") rather than auto-chaining.
+
+**Output to the workspace:** the structured review plus the annotated source file (`*_REVIEWED.*`). When part of a project, save under `.research/` and register in the manifest; advance `stage` to `pre-submission`.

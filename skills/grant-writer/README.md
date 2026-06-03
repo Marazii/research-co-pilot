@@ -42,6 +42,8 @@ See [`examples/grant-writer/`](../../examples/grant-writer/) for a worked sample
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`research-brainstorm`** — Brainstorm shapes the Specific Aims (each aim should be defensible as one of the strongest candidates from the brainstorm).
 - **`methodology-advisor`** — Approach section sourced directly from the methodology document.
 - **`literature-review`** — Significance section sourced from the lit-review's gap analysis and key citations.

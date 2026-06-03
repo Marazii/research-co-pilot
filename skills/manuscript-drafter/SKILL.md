@@ -23,6 +23,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Manuscript Drafter — Long-Form Drafting Without the Usual AI Mistakes
@@ -370,3 +371,29 @@ Report the results of the self-audit to the user along with the draft, especiall
 - The strongest signal a draft is bad is that the new paragraphs sound like a different person wrote them. The Phase 3 voice profile + Phase 7 Pass E consistency check together are the most important new mechanisms in this version of the skill.
 - For target-journal-specific style (e.g. AMA Manual of Style, APA Publication Manual, specific journal author guidelines), point the skill at the guideline document or specify the conventions you want enforced.
 - Hebrew academic register tends to use more passive constructions, more classical connectors ("אם כן", "יתרה מזאת", "בנוסף לכך"), and more nominalization than colloquial Hebrew. The voice profile catches the author's specific calibration on the classical-contemporary spectrum.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Drafting — after analysis, before peer review.
+
+**Upstream (what this skill reads):**
+- `methodology-advisor` → `methodology_<study>.md` — Methods section sourced verbatim where possible.
+- `data-analysis` → `analysis_<topic>.md` — every number in Results traces back here.
+- `qualitative-coding` → themes report / codebook — every theme in Findings traces back here.
+- `literature-review` → `lit_review_<topic>.md` — the related-work synthesis + verified bibliography.
+- The **existing manuscript draft** (for voice extraction) and the **bibliography**.
+- *At intake, check `.research/manifest.json` for these before asking the user for paths; reconcile against the filesystem (files win).*
+
+**Downstream (what this skill feeds):**
+- `citation-formatter` — hand the draft's bibliography for style normalization once `[CITATION NEEDED]` markers are resolved.
+- `peer-review` — the finished draft, for a pre-submission audit.
+- `talk-builder` — turn the paper into a conference talk.
+- `reviewer-response` — later, when an R&R arrives (this skill drafts the voice-matched revisions).
+
+**Chaining (when an upstream input is missing):**
+- **Claude Code:** offer to invoke `Skill(methodology-advisor)` / `Skill(data-analysis)` / `Skill(qualitative-coding)` first — ask before chaining; never auto-run.
+- **claude.ai:** tell the user "run /methodology (or /analyze, /code-themes) first, then return" — or proceed inline if they supply the inputs in chat.
+
+**Output to the workspace:** write `manuscript_<section>_<topic>.md` under `.research/`, register it in the manifest, and advance `stage` to `drafting`.

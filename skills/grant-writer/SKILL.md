@@ -21,6 +21,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Grant Writer — Funder-Specific, Criterion-Aligned, Honest
@@ -190,3 +191,25 @@ Report self-audit results to the user along with the draft.
 
 - Funded grants are also a function of grantsmanship that AI can't replicate: relationships with program officers, alignment with current portfolio gaps, timing. Your draft is one input among many.
 - For specialized schemes (cooperative agreements, training grants, equipment grants, conference grants), check the program announcement for non-standard sections (consortium agreements, training plans, equipment use plans).
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Funding — a parallel track, drawn on whenever a proposal is in play.
+
+**Upstream (what this skill reads):**
+- `research-brainstorm` → `brainstorm_<topic>.md` — the sharpened aims.
+- `methodology-advisor` → `methodology_<study>.md` — becomes the Approach section.
+- `literature-review` → `lit_review_<topic>.md` — the gap analysis + key citations become Significance.
+- *At intake, check `.research/manifest.json` for these before asking for paths.*
+
+**Downstream (what this skill feeds):**
+- `citation-formatter` — normalize the bibliography to the funder's required style.
+- `peer-review` — optionally audit a draft proposal before submission.
+
+**Chaining:**
+- **Claude Code:** if aims or design are missing, offer to invoke `Skill(research-brainstorm)` / `Skill(methodology-advisor)` first (ask). After drafting, offer `Skill(citation-formatter)`.
+- **claude.ai:** advise the prerequisite skill to run first rather than auto-chaining.
+
+**Output to the workspace:** write `grant_<funder>_<section>.md` under `.research/`, register it in the manifest.

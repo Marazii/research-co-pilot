@@ -21,6 +21,7 @@ allowed-tools:
   - WebFetch
   - TodoWrite
   - AskUserQuestion
+  - Skill
 ---
 
 # Qualitative Coding & NLP-Assisted Analysis
@@ -273,3 +274,23 @@ Before declaring done:
 - [ ] Reflexivity statement included.
 - [ ] Audit trail is reconstructable from memos and codebook versions.
 - [ ] If NLP was used, validation against hand-coding is documented.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Analysis (qualitative) — after data collection, before drafting.
+
+**Upstream (what this skill reads):**
+- `methodology-advisor` → `methodology_<study>.md` — the qualitative tradition (thematic / grounded theory / IPA / etc.) and the analysis plan.
+- The **transcripts / corpus** themselves.
+- *At intake, check `.research/manifest.json` for the methodology before asking for the tradition.*
+
+**Downstream (what this skill feeds):**
+- `manuscript-drafter` — the themes report becomes the Findings section, with quotes + participant IDs preserved.
+
+**Chaining:**
+- **Claude Code:** for a large corpus, spawn the `transcript-coder` subagent (bulk clean + code). On completion, offer to invoke `Skill(manuscript-drafter)` to write up the Findings (ask first).
+- **claude.ai:** process transcripts inline in the analysis sandbox; advise "run /draft next for the Findings section."
+
+**Output to the workspace:** write the codebook + themes report (+ anonymization key kept separate) under `.research/`, register in the manifest, advance `stage` to `analysis`.

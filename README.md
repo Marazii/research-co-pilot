@@ -1,7 +1,7 @@
 # research-co-pilot
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Marazii/research-co-pilot/blob/main/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.10.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.11.0-blue.svg)](https://github.com/Marazii/research-co-pilot/blob/main/CHANGELOG.md)
 [![CI](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml/badge.svg)](https://github.com/Marazii/research-co-pilot/actions/workflows/validate.yml)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-8b5cf6.svg)](#installation--claude-code)
 [![Claude.ai](https://img.shields.io/badge/Claude.ai-skills-d97757.svg)](#installation--claudeai)
@@ -50,6 +50,38 @@ Same skills, same behavior, two surfaces.
 Every skill is grounded in research methods literature and refuses common AI failure modes — no fabricated citations, no p-hacking, no glossed-over disagreement between sources, no qualitative "themes" without an audit trail, no embellished findings, no voice-mismatched drafts.
 
 Each skill name above links to its **per-skill README** with a synthetic example, the trigger phrases, composition with other skills, and honest caveats. The [`examples/`](./examples/) folder contains a worked sample for each shipped skill.
+
+---
+
+## How the skills work together
+
+The skills aren't 14 islands — they're an **orchestrated network**: skills are nodes, shared artifacts are edges, and `/research` is the conductor. Each skill reads what upstream skills produced, does its one job, writes a predictable artifact, and points at what comes next.
+
+```
+research-brainstorm
+  └→ literature-review
+       └→ methodology-advisor ──→ ethics-committee        (audit before data)
+            ├→ survey-design          (if an instrument is needed)
+            └→ [DATA COLLECTION — your turn]
+                 ├→ data-analysis ──→ stats-validator (independent second look)
+                 └→ qualitative-coding
+                      └→ manuscript-drafter ──→ citation-formatter
+                           ├→ peer-review            (pre-submission audit)
+                           │    └→ reviewer-response  (after an R&R)
+                           └→ talk-builder           (conference talk)
+
+grant-writer          ← draws on brainstorm + methodology (funding; parallel track)
+replication-designer  ← draws on a target paper; can seed a fresh cycle
+```
+
+Two ways to use the network:
+
+- **Pipeline mode** — say `/research start a project on <topic>` and the conductor walks the whole lifecycle, invoking each skill in turn (Claude Code), reading and writing a shared `.research/` workspace, and **pausing at the steps only you can do** (collecting data, getting IRB approval, submitting). It resumes where you left off.
+- **Pairwise handoffs** — run any single skill; when it needs an upstream artifact or finishes with an obvious next step, it *offers* to chain to the relevant skill (Claude Code) or tells you which `/command` to run next (claude.ai). It never auto-runs another skill without your go-ahead.
+
+Skills coordinate through a small `.research/` workspace + `manifest.json` so they discover each other's outputs instead of making you re-supply paths. Workspace use is opt-in — run any skill standalone and it behaves exactly as before.
+
+Full map, manifest schema, the human-gate rule, and the Claude Code ↔ claude.ai degradation table: [`docs/skill-network.md`](./docs/skill-network.md).
 
 ---
 

@@ -23,6 +23,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Talk Builder — Paper → Academic Presentation
@@ -317,3 +318,23 @@ For a talk drawn from a thesis or a body of work:
 - For in-person hybrid: a wireless mic + face-the-camera workflow.
 - If the conference offers captioning, format slides to leave the bottom 15% clear.
 - For international audiences with mixed first languages: slow down, define terms once, write key terms on the slide for visual reinforcement.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Dissemination — turn a finished paper into a talk. Often terminal.
+
+**Upstream (what this skill reads):**
+- `manuscript-drafter` → `manuscript_<section>_<topic>.md` (or the finished paper) — the source material.
+- `literature-review` → `lit_review_<topic>.md` — field framing for invited talks / keynotes that position the work in a larger narrative.
+- *At intake, check `.research/manifest.json` for a draft/paper before asking for one.*
+
+**Downstream (what this skill feeds):**
+- `peer-review` (presentation mode) — a pre-conference critique of the drafted deck.
+
+**Chaining:**
+- **Claude Code:** on completion, offer to invoke `Skill(peer-review)` in presentation mode to pressure-test the deck before the talk (ask first).
+- **claude.ai:** advise "run /peer-review on the slides for a pre-conference critique."
+
+**Output to the workspace:** write `talk_<short_title>_<minutes>min.md` (+ optional Marp/Quarto/reveal.js/Beamer stub) under `.research/`, register it in the manifest, set `stage` to `dissemination`.

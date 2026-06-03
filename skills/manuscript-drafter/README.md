@@ -43,6 +43,8 @@ See [`examples/manuscript-drafter/`](../../examples/manuscript-drafter/) for a w
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`literature-review`** — Pulls forward the synthesis into the related-work section.
 - **`methodology-advisor`** — Methods section sourced verbatim where possible.
 - **`data-analysis`** — Results section sourced from the analysis report; numerical claims trace back to it.

@@ -21,6 +21,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Ethics Committee — Pre-Submission Stress Test for Research Protocols
@@ -290,3 +291,25 @@ For an **ethics statement** (paper or grant) rather than a decision letter, prod
 - [ ] Did I avoid giving legal advice and direct the user to the right office for legal questions?
 - [ ] Are required revisions specific enough that the researcher knows what to do?
 - [ ] Did I include the disclaimer that this isn't institutional approval?
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Ethics — after study design, before data collection. Acts as a gate.
+
+**Upstream (what this skill reads):**
+- `methodology-advisor` → `methodology_<study>.md` — the design + data plan to audit.
+- `replication-designer` → `replication_design_<title>.md` — replications re-trigger ethics review even when the original was approved.
+- *At intake, check `.research/manifest.json` for the methodology before asking for the protocol.*
+
+**Downstream (what this skill feeds):**
+- The **data-collection gate** — the protocol should clear this audit before any data is collected.
+- `reviewer-response` — when reviewers ask for ethics-section clarifications, its structured output drafts the reply.
+- `grant-writer` — the data-management-plan and human-subjects sections.
+
+**Chaining:**
+- **Claude Code:** typically invoked *by* methodology-advisor or replication-designer. On completion with required revisions, offer to invoke `Skill(methodology-advisor)` to adjust the design (ask first).
+- **claude.ai:** advise "revise the design (/methodology) per the required revisions, then re-run /ethics."
+
+**Output to the workspace:** write `ethics_review_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `ethics`. Reminder: this is a self-audit, not institutional approval.

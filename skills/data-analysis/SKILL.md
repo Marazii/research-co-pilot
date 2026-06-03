@@ -20,6 +20,7 @@ allowed-tools:
   - WebFetch
   - TodoWrite
   - AskUserQuestion
+  - Skill
 ---
 
 # Data Analysis — Cleaning, Stats, Modeling, Visualization
@@ -222,3 +223,25 @@ When the dataset is large, computation is slow, or many model variants are neede
 - Confusing statistical significance with practical importance.
 - Reading too much into n < 30 in any subgroup.
 - Ignoring clustered data structure (treating clustered observations as independent).
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Analysis — after data collection, before drafting.
+
+**Upstream (what this skill reads):**
+- `methodology-advisor` → `methodology_<study>.md` — the pre-specified analysis plan; the creative AI/ML/Big Data extensions section often names the models to run.
+- `survey-design` → the fielded instrument (once data is in) — variable definitions and scoring keys.
+- The **dataset** itself.
+- *At intake, check `.research/manifest.json` for the methodology before asking for paths; reconcile against the filesystem.*
+
+**Downstream (what this skill feeds):**
+- `manuscript-drafter` — the Results section is sourced from `analysis_<topic>.md`.
+- `stats-validator` (subagent) — an independent second look on the analysis, no narrative contamination.
+
+**Chaining:**
+- **Claude Code:** if no analysis plan exists, offer to invoke `Skill(methodology-advisor)` first (ask before chaining). For heavy compute, spawn the `data-cruncher` subagent. For an independent check, spawn `stats-validator`.
+- **claude.ai:** advise "run /methodology first" if the design is unsettled; run heavy work inline in the analysis sandbox.
+
+**Output to the workspace:** write `analysis_<topic>.md` (+ the reproducible script) under `.research/`, register it in the manifest, advance `stage` to `analysis`.

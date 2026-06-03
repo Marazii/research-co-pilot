@@ -35,6 +35,8 @@ See [`examples/research-brainstorm/`](../../examples/research-brainstorm/) for a
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`literature-review`** — Run brainstorm first to identify candidate questions; run literature-review on the top 1-2 to verify novelty before committing.
 - **`methodology-advisor`** — Once a question is chosen, methodology-advisor designs the study.
 - **`grant-writer`** — A brainstorm output shapes the Specific Aims for a grant proposal.

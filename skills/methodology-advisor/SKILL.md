@@ -19,6 +19,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Methodology Advisor — Quant + Qual Research Design
@@ -287,3 +288,27 @@ After the table, write a one-paragraph **researcher decision**: which (if any) o
 ## Final advice
 
 If the user has already committed to a design that doesn't fit their question, say so directly and propose alternatives. Don't help build a beautiful answer to the wrong question.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Design — after the literature review, before ethics review and data collection.
+
+**Upstream (what this skill reads):**
+- `literature-review` → `lit_review_<topic>.md` — the gap this design closes.
+- `research-brainstorm` → `brainstorm_<topic>.md` — the question, if no lit review was run.
+- *At intake, check `.research/manifest.json` for these before asking the user to restate the question or gap.*
+
+**Downstream (what this skill feeds):**
+- `ethics-committee` — audit the protocol before any data is collected (strongly recommended next step).
+- `survey-design` — if the design needs a new instrument.
+- `data-analysis` / `qualitative-coding` — the Analysis Plan section is their starting point.
+- `manuscript-drafter` — the Methods section is sourced from `methodology_<study>.md`.
+- `grant-writer` — the design becomes the Approach section.
+
+**Chaining:**
+- **Claude Code:** on completion, offer to invoke `Skill(ethics-committee)` for a pre-IRB audit (ask first). Offer `Skill(survey-design)` if an instrument is needed.
+- **claude.ai:** advise "run /ethics next for a pre-submission audit" rather than auto-chaining.
+
+**Output to the workspace:** write `methodology_<study>.md` under `.research/`, register it in the manifest, advance `stage` to `design`.

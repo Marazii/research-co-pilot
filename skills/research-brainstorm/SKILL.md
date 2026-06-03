@@ -16,6 +16,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Research Brainstorm — Find Questions Worth Studying
@@ -169,3 +170,23 @@ Save the brainstorm to `brainstorm_<topic>.md`:
 - Resist converging too early. The 18th idea is sometimes the best one.
 - Don't filter for politeness. If an idea is "obvious enough that a competent grad student would have done it by now", flag that — don't pretend it's novel.
 - The user's silence on an idea is not endorsement. Ask which 2-3 they want to develop further before moving to Phase 5.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Ideation — the usual entry point of a project.
+
+**Upstream (what this skill reads):**
+- Typically none — this is where a project starts. Optionally a rough topic, an existing dataset, or a paper that bugged the user.
+
+**Downstream (what this skill feeds):**
+- `literature-review` — verify the novelty of the top candidate questions before committing.
+- `methodology-advisor` — design a study around the chosen question.
+- `grant-writer` — the sharpened question + framing become Specific Aims.
+
+**Chaining:**
+- **Claude Code:** once the user picks their top 1-3 questions, offer to invoke `Skill(literature-review)` to check novelty, then `Skill(methodology-advisor)` to design (ask before each).
+- **claude.ai:** advise "run /lit-review on your top question next to check it's not already settled."
+
+**Output to the workspace:** write `brainstorm_<topic>.md` under `.research/`, register it in the manifest, set `stage` to `ideation`.

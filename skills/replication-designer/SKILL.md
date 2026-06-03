@@ -22,6 +22,7 @@ allowed-tools:
   - WebFetch
   - AskUserQuestion
   - TodoWrite
+  - Skill
 ---
 
 # Replication Designer — Rebuild the Study Honestly
@@ -223,3 +224,24 @@ Write `replication_design_<short_title>.md`:
 - [ ] Pre-registration plan is concrete (platform + timing).
 - [ ] Original authors have been (or will be) contacted where feasible.
 - [ ] The framing is "estimate the effect honestly," not "prove it wrong."
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Design (replication track) — can seed a fresh lit-review → methodology cycle.
+
+**Upstream (what this skill reads):**
+- A **target paper** (external) — path, DOI, or citation of the study to replicate.
+- `literature-review` → `lit_review_<topic>.md` — context on whether the effect has already been contested.
+
+**Downstream (what this skill feeds):**
+- `methodology-advisor` — the replication's own design follows the standard methodology workflow.
+- `ethics-committee` — replications re-trigger ethics review; audit before collecting.
+- `data-analysis` — later, the pre-specified primary test + equivalence test + meta-analytic synthesis.
+
+**Chaining:**
+- **Claude Code:** on completion, offer to invoke `Skill(ethics-committee)` for the replication's protocol audit and `Skill(methodology-advisor)` to flesh out the design (ask first).
+- **claude.ai:** advise "run /ethics on the replication protocol next."
+
+**Output to the workspace:** write `replication_design_<short_title>.md` under `.research/`, register it in the manifest, set `stage` to `design`.

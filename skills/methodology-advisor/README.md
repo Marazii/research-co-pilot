@@ -44,6 +44,8 @@ See [`examples/methodology-advisor/`](../../examples/methodology-advisor/) for a
 
 ## Composes well with
 
+*Part of the [skill network](../../docs/skill-network.md) — the lifecycle DAG and the `.research/` workspace contract live there. The pairings below are the human-readable view of this skill's `## Handoffs` section in its SKILL.md.*
+
 - **`literature-review`** — Use literature-review's "Gaps and open questions" section as input here. Methodology-advisor designs the study that closes one of those gaps.
 - **`ethics-committee`** — Hand the methodology output to the ethics-committee skill for a pre-IRB audit before submitting.
 - **`data-analysis`** — The Analysis Plan section feeds directly into data-analysis when the data arrives.

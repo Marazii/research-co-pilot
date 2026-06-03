@@ -15,6 +15,7 @@ allowed-tools:
   - WebSearch
   - WebFetch
   - AskUserQuestion
+  - Skill
 ---
 
 # Citation Formatter — Multi-Style, Verifiable
@@ -240,3 +241,25 @@ If the user has many references and a `.bib` file already exists, point them to:
 - **citation.js** for programmatic conversion.
 
 For one-off conversions, do the formatting yourself.
+
+## Handoffs
+
+Part of the research-co-pilot skill network. See [`docs/skill-network.md`](../../docs/skill-network.md) for the full map, the `.research/` workspace + manifest contract, and the human-gate rule.
+
+**Lifecycle position:** Citations — a support skill; runs whenever references exist (drafting, pre-submission, grant prep).
+
+**Upstream (what this skill reads):**
+- `manuscript-drafter` → `manuscript_<section>_<topic>.md` — the draft whose bibliography needs formatting (after `[CITATION NEEDED]` markers are resolved).
+- `literature-review` → `lit_review_<topic>.md` — its reference list as a starter bibliography.
+- `grant-writer` → grant sections needing funder-specific citation style.
+- *At intake, check `.research/manifest.json` for a draft or reference list before asking for paths.*
+
+**Downstream (what this skill feeds):**
+- `manuscript-drafter` — hand the cleaned references back into the draft.
+- `peer-review` — clean, verified references before a pre-submission audit.
+
+**Chaining:**
+- **Claude Code:** typically invoked *by* manuscript-drafter, reviewer-response, or grant-writer rather than the reverse. When run standalone on a manuscript, offer to invoke `Skill(peer-review)` next (ask first).
+- **claude.ai:** advise the user on the next step rather than auto-chaining.
+
+**Output to the workspace:** write `references.md` (or edit the manuscript in place) under `.research/`, register it in the manifest.

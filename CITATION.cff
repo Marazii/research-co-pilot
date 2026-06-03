@@ -20,15 +20,15 @@ authors:
 repository-code: "https://github.com/Marazii/research-co-pilot"
 url: "https://github.com/Marazii/research-co-pilot"
 license: MIT
-version: "0.10.0"
-date-released: "2026-05-14"
+version: "0.11.0"
+date-released: "2026-05-15"
 identifiers:
   - type: doi
     value: "10.5281/zenodo.20186491"
     description: "Concept DOI — resolves to the latest version."
   - type: doi
     value: "10.5281/zenodo.20186492"
-    description: "Version DOI for v0.10.0."
+    description: "Version DOI (auto-updated to the v0.11.0 DOI by update-citation-doi.yml when the tag mints)."
 keywords:
   - research
   - academic
@@ -58,8 +58,8 @@ preferred-citation:
   authors:
     - family-names: "Arazi"
       given-names: "Maya"
-  version: "0.10.0"
-  date-released: "2026-05-14"
+  version: "0.11.0"
+  date-released: "2026-05-15"
   url: "https://github.com/Marazii/research-co-pilot"
   license: MIT
   doi: "10.5281/zenodo.20186492"
