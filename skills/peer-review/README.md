@@ -10,7 +10,7 @@
 - Mode: paper verdict (Accept / Minor revisions / Major revisions / Reject) / homework verdict (grade band) / committee panel (3-5 reviewers with deliberate diversity) / fact-check audit / plagiarism-check / draft thinking-partner / presentation feedback / iterate (post-review).
 - Optional: discipline / target venue / persona (e.g., "review as a senior empirical-psych professor") / language override.
 - For `--presentation` mode: talk length, venue, audience.
-- For iterate mode: link to or paste the prior review.
+- For iterate mode: link to or paste the prior review. Submit a revised draft and iterate mode runs a **revision diff + regression analysis** — checking both that prior feedback was addressed and that the fixes didn't break anything that was previously fine.
 
 **Output:**
 
@@ -28,7 +28,7 @@
 
 ## When to use this
 
-Use this skill when getting pre-submission feedback on a paper (before sending it to a journal or to your advisor), when grading homework / dissertation chapters with the rigor of a senior reviewer, when auditing AI-assisted writing for hallucinated citations or factual drift, when checking a draft for paraphrased-but-uncredited arguments (plagiarism-style), when working through an unfinished draft as a thinking partner (no verdict, no scoring — just engagement), when getting a committee panel's worth of viewpoints before submission, when reviewing a colleague's conference talk before they give it, or when continuing a prior review with revision diffs (iterate mode).
+Use this skill when getting pre-submission feedback on a paper (before sending it to a journal or to your advisor), when grading homework / dissertation chapters with the rigor of a senior reviewer, when auditing AI-assisted writing for hallucinated citations or factual drift, when checking a draft for paraphrased-but-uncredited arguments (plagiarism-style), when working through an unfinished draft as a thinking partner (no verdict, no scoring — just engagement), when getting a committee panel's worth of viewpoints before submission, when reviewing a colleague's conference talk before they give it, or when continuing a prior review with revision diffs + regression analysis (iterate mode) — re-running it after you revise to confirm the fixes didn't introduce new problems (a corrected number now inconsistent elsewhere, a cut paragraph orphaning a cross-reference, a reworded claim no longer matching its citation).
 
 The skill is intentionally not deferential. It is calibrated to give the kind of feedback an experienced reviewer who respects you would give — substantive, methodical, neither cruel nor flattering. Reviewers who only mark problems and reviewers who only give praise are equally useless.
 

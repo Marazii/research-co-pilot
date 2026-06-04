@@ -6,6 +6,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.11.4] — 2026-06-03
+
+**Regression analysis in `peer-review --iterate`.** When you submit a revised draft to iterate mode, the revision-diff pass now runs an explicit **regression analysis** — verifying that the changes and corrections didn't introduce *new* problems or break parts that were previously fine. A revision is not automatically an improvement; fixing one issue while silently creating two is a net loss, and the diff now catches it.
+
+### Changed
+
+- **`peer-review` iterate mode → revision diff** gained a dedicated **Regression analysis** section (Section 3). For every change, it traces downstream effects across six regression classes:
+  - **Consistency** — a value/term/claim changed in one place but not its dependents (sample size fixed in methods, still old in the abstract/table; variable renamed in analysis but not figure captions). Cross-checks changed facts against the project vault's `facts` + canonical `bibliography.md` when a vault exists.
+  - **Structural** — cut/moved content orphaned a cross-reference, a dangling "this", a still-cited dropped figure, or a broken section reference.
+  - **Argumentative** — a fix weakened or contradicted another part (a new caveat now contradicting an unchanged confident conclusion).
+  - **Citation / evidence** — a reworded claim no longer matches its source; a removed citation leaves a claim unsupported; new prose asserts a fact with no cite.
+  - **Scope / length / register** — a fix blew past a word limit, reintroduced banned register, or unbalanced the paper.
+  - **Re-introduced** — a previously-fixed problem resurfaced.
+- New annotation prefix **`[REGRESSION]`** (alongside `[REVISION]`) for the in-document marks on supported formats. The pass focuses on edited regions + their dependents, and states plainly when no regressions are found.
+- peer-review README updated (iterate-mode inputs + "when to use") to describe the revision-diff + regression analysis.
+
 ## [0.11.3] — 2026-06-03
 
 **`vault-organizer` subagent.** Point it at a pile of files — a messy folder, a Downloads dump, an inherited project — and it reads through everything in isolation and files it into the vault's categories.
@@ -374,7 +390,8 @@ Based on direct feedback from a senior reviewer who used `manuscript-drafter` to
 - MIT License.
 - README with install paths for both Claude Code and claude.ai.
 
-[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.3...HEAD
+[Unreleased]: https://github.com/Marazii/research-co-pilot/compare/v0.11.4...HEAD
+[0.11.4]: https://github.com/Marazii/research-co-pilot/compare/v0.11.3...v0.11.4
 [0.11.3]: https://github.com/Marazii/research-co-pilot/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/Marazii/research-co-pilot/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/Marazii/research-co-pilot/compare/v0.11.0...v0.11.1
